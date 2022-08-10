@@ -7,11 +7,6 @@ import {
 import { mode } from "@chakra-ui/theme-tools";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
 
-const config: ThemeConfig = {
-  initialColorMode: "light",
-  useSystemColorMode: false,
-};
-
 export const theme = extendTheme({
   styles: {
     global: (theme: StyleFunctionProps) => ({
@@ -60,18 +55,7 @@ export const theme = extendTheme({
         underline: "none",
       },
     },
-    GlobalAppBar: {
-      defaultProps: {
-        elevation: 0,
-        position: "fixed",
-      },
-      styleOverrides: {
-        root: {
-          backgroundColor: "white",
-          height: 60,
-        },
-      },
-    },
+
     GlobalTypography: {
       styleOverrides: {
         h1: {
@@ -99,19 +83,7 @@ export const theme = extendTheme({
         },
       },
     },
-    Box: {
-      variants: {
-        paidBtn: (theme: StyleFunctionProps) => ({
-          color: "green",
-          border: "1px solid green",
-          borderColor: "green",
-          "&:hover": {
-            backgroundColor: "green",
-            color: "white",
-          },
-        }),
-      },
-    },
+
     Button: {
       /*defaultProps: {
         colorScheme: 'primary',
