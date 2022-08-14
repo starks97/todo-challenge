@@ -1,6 +1,6 @@
 
 import type { AppProps } from "next/app";
-import { ChakraProvider, DarkMode } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "../themes";
 
 function MyApp({ Component, pageProps }: AppProps) {

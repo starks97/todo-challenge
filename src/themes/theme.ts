@@ -7,15 +7,22 @@ import {
 import { mode } from "@chakra-ui/theme-tools";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
 
+// 2. Add your color mode config
+const config: ThemeConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: false,
+};
+
 export const theme = extendTheme({
+  config,
   styles: {
     global: (theme: StyleFunctionProps) => ({
       "*": {
         scrollBehavior: "smooth",
       },
       body: {
-        backgroundColor: theme.theme.colors.black,
-        color: theme.theme.colors.white,
+        //backgroundColor: theme.theme.colors.black,
+        //color: theme.theme.colors.white,
         lineHeight: "1",
         minH: "100vh",
       },
@@ -86,10 +93,10 @@ export const theme = extendTheme({
 
     Button: {
       /*defaultProps: {
-        colorScheme: 'primary',
-        variant: 'primary',
-        size: 'brandSm',
-      },*/
+      colorScheme: 'primary',
+      variant: 'primary',
+      size: 'brandSm',
+    },*/
       sizes: {
         brandSm: {
           fontSize: "sm",
