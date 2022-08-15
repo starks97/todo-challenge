@@ -18,7 +18,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { NavLinks } from "../utils";
+import { NavLinks } from "../navbar";
 import { AddTodo, FilterTags, SearchInput } from "../navbar";
 
 type Props = {};

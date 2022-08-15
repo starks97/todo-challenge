@@ -8,11 +8,3 @@ function generateId(): string {
 
 export default generateId;
 type IDGenerator = string | number;
-
-export async function setHashPassword(password: string): Promise<string> {
-  const hashedPassword = crypto
-    .createHash("sha256")
-    .update(password)
-    .digest("base64");
-  return hashedPassword;
-}

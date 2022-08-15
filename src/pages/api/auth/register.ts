@@ -1,4 +1,4 @@
-import { methodSwitcher } from "../../../components/utils";
+import { methodSwitcher } from "../../../app/backend/utils";
 import { UserAuth } from "../../../app/backend/auth";
 
 export default methodSwitcher({
