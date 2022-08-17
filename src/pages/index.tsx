@@ -1,4 +1,4 @@
-import { Navbar, SignUp } from "../components/layouts";
+import { Navbar } from "../components/layouts";
 
 type Props = {};
 

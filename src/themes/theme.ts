@@ -4,7 +4,6 @@ import {
   type ThemeConfig,
   withDefaultColorScheme,
 } from "@chakra-ui/react";
-import { mode } from "@chakra-ui/theme-tools";
 import type { StyleFunctionProps } from "@chakra-ui/styled-system";
 
 // 2. Add your color mode config
