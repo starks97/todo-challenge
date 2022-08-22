@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, ChangeEvent, useContext } from "react";
+
+import { NextRouter, useRouter } from "next/router";
 
 import {
   Flex,
@@ -14,9 +16,37 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { AuthContext } from "../../context";
 
 export default function SimpleCard() {
-  const [swicthSign, setSwitchSign] = useState<boolean>(false);
+  const router: NextRouter = useRouter();
+
+  const { loginUser } = useContext(AuthContext);
+
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+
+  const [login, setLogin] = useState({
+    username: "",
+    password: "",
+  });
+
+  const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const response = await loginUser(login.username, login.password);
+      if (response) {
+        setIsLogin(true);
+        router.push("/");
+      }
+      return response;
+    } catch (err) {
+      console.log(err, "login not authenticated");
+    }
+  };
+
+  useEffect(() => {
+    router.prefetch("/");
+  }, []);
   return (
     <Flex
       minH={"100vh"}
@@ -38,35 +68,52 @@ export default function SimpleCard() {
           p={8}
         >
           <Stack spacing={4}>
-            <FormControl id="username" isRequired>
-              <FormLabel>Username</FormLabel>
-              <Input type="username" />
-            </FormControl>
-            <FormControl id="password" isRequired>
-              <FormLabel>Password</FormLabel>
-              <Input type="password" />
-            </FormControl>
-            <Stack spacing={10}>
-              <Stack
-                direction={{ base: "column", sm: "row" }}
-                align={"start"}
-                justify={"space-between"}
-              >
-                <Checkbox>Remember me</Checkbox>
-                <Link color={"blue.400"} href="/auth/register">
-                  Dont have account yet?
-                </Link>
+            <form onSubmit={handleClick}>
+              <FormControl id="username" isRequired>
+                <FormLabel>Username</FormLabel>
+                <Input
+                  type="username"
+                  value={login.username}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setLogin({ ...login, username: e.target.value })
+                  }
+                />
+              </FormControl>
+              <FormControl id="password" isRequired>
+                <FormLabel>Password</FormLabel>
+                <Input
+                  type="password"
+                  value={login.password}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setLogin({ ...login, password: e.target.value })
+                  }
+                />
+              </FormControl>
+              <Stack spacing={10}>
+                <Stack
+                  direction={{ base: "column", sm: "row" }}
+                  align={"start"}
+                  justify={"space-between"}
+                >
+                  <Checkbox>Remember me</Checkbox>
+                  <Link color={"blue.400"} href="/auth/register">
+                    Dont have account yet?
+                  </Link>
+                </Stack>
+                <Button
+                  type="submit"
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  isLoading={isLogin}
+                  loadingText="Logging in..."
+                >
+                  Sign in
+                </Button>
               </Stack>
-              <Button
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                  bg: "blue.500",
-                }}
-              >
-                Sign in
-              </Button>
-            </Stack>
+            </form>
           </Stack>
         </Box>
       </Stack>

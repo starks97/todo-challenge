@@ -1,13 +1,12 @@
 import { methodSwitcher } from "../../../app/backend/utils";
 import { UserAuth } from "../../../app/backend/auth";
 import GenerateJWT from "../../../app/backend/auth/jwt";
-import { User } from "@prisma/client";
 
 export default methodSwitcher({
   POST: async (req, res) => {
-    if (!req.body) {
-      res.statusCode = 404;
-      res.send({ message: "Error auth" });
+    if (!req.body || typeof req.body !== "object") {
+      res.statusCode = 400;
+      res.send({ message: "Bad Request" });
       return;
     }
 
@@ -16,7 +15,7 @@ export default methodSwitcher({
       username = "",
     }: { password: string; username: string } = req.body;
 
-    const user = (await UserAuth.login(password, username)) as unknown as User;
+    const user = await UserAuth.login(password, username);
     if (!user) {
       res.statusCode = 404;
       res.send({ message: "invalid credentials" });
@@ -27,7 +26,7 @@ export default methodSwitcher({
 
     const token = new GenerateJWT(id, username).generateJWT();
     if (!token) {
-      res.statusCode = 404;
+      res.statusCode = 401;
       res.send({ message: "invalid token" });
       return;
     }

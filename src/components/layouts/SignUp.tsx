@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 import { NextRouter, useRouter } from "next/router";
 
@@ -20,9 +20,12 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { AuthContext } from "../../context";
 
 export default function SignUp() {
   const router: NextRouter = useRouter();
+
+  const { registerUser } = useContext(AuthContext);
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -36,22 +39,12 @@ export default function SignUp() {
   const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      let response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (
-        !response.ok ||
-        data.username.length < 0 ||
-        data.password.length < 0
-      ) {
-        setIsRegister(false);
-
-        return;
+      const response = await registerUser(data.username, data.password);
+      if (response) {
+        setIsRegister(true);
+        router.push("/auth/login");
       }
-      setIsRegister(true);
-      router.push("/auth/login");
+      return response;
     } catch (e) {
       console.log(e, "error form not valid");
     }

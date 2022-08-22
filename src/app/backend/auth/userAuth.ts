@@ -22,12 +22,13 @@ export class UserAuth {
     } finally {
       await PrismaDB.disconnect();
     }
+    return null;
   }
 
   static async login<T extends string = string>(
     password: T,
     username: T
-  ): Promise<User | null | undefined> {
+  ): Promise<User | null> {
     let prisma = await PrismaDB.getInstance();
 
     try {
@@ -49,17 +50,15 @@ export class UserAuth {
       }
     } catch (err) {
       console.error(err);
-      return null;
     } finally {
       await PrismaDB.disconnect();
     }
+    return null;
   }
 
   static async verifyToken(
     id: string
-  ): Promise<
-    Omit<User, "createdAt" | "updatedAt" | "password"> | undefined | null
-  > {
+  ): Promise<Omit<User, "createdAt" | "updatedAt" | "password"> | null> {
     let prisma = await PrismaDB.getInstance();
 
     try {
@@ -85,11 +84,17 @@ export class UserAuth {
     } catch (err) {
       console.log(err);
     }
+    return null;
   }
 }
 
 /*
 type GenericNames = "user";
+
+
+if(data === null || data === undefined || typeof data !== "object") {
+  throw new Error("data is not an object");
+}
 
 class GenericModel<T extends User = User> {
   constructor(private prisma: PrismaClient, private name: GenericNames) {}

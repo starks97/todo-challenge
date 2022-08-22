@@ -6,10 +6,7 @@ if (!process.env.JWT_SECRET) {
 }
 
 export default class GenerateJWT {
-  constructor(public id: string, public username: string) {
-    id = this.id;
-    username = this.username;
-  }
+  constructor(public id: string, public username: string) {}
 
   public generateJWT(): string {
     return jwt.sign(
@@ -19,7 +16,7 @@ export default class GenerateJWT {
     );
   }
 
-  static decoded(token: string): Promise<string>{
+  static decoded(token: string): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
         jwt.verify(token, process.env.JWT_SECRET as string, (err, payload) => {
@@ -35,22 +32,3 @@ export default class GenerateJWT {
     });
   }
 }
-
-/*try {
-      const verified = jwt.verify(token, process.env.JWT_SECRET as string);
-  
-      if (!verified) return null;
-  
-      const payload = jwt.decode(token, {
-        complete: false,
-        json: true,
-      });
-  
-      if (!payload) return null;
-  
-      if (typeof payload === 'string') return null;
-  
-      return payload as JwtPayload;
-    } catch {
-      return null;
-    } */
