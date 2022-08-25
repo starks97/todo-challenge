@@ -1,16 +1,18 @@
 import { FC, useReducer, useEffect } from "react";
-import { AuthContext, authReducer } from "./";
+import { AuthContext, authReducer } from ".";
 import { User } from "@prisma/client";
-import Cookies from "js-cookie";
 
 export interface AuthState {
   isLoggedIn: boolean;
-  Context_user?: Omit<User, "password" | "createdAt" | "updatedAt">;
+  auth?: {
+    user: Omit<User, "password" | "createdAt" | "updatedAt">;
+    token: string;
+  };
 }
 
 const AUTH_INITIAL_STATE: AuthState = {
   isLoggedIn: false,
-  Context_user: undefined,
+  auth: undefined,
 };
 
 export const AuthProvider: FC<{ children: React.ReactNode }> = ({
@@ -30,7 +32,10 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       });
       if (response.status === 200) {
         const user = await response.json();
-        dispatch({ type: "[Auth] - Login", payload: user });
+        dispatch({
+          type: "[Auth] - Login",
+          payload: { user: user.user, token: user.token },
+        });
       }
       return response;
     } catch (err) {
@@ -54,7 +59,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       const userLogged = await response.json();
       dispatch({
         type: "[Auth] - Login",
-        payload: userLogged,
+        payload: { user: userLogged.user, token: userLogged.token },
       });
       return true;
     } catch (err) {

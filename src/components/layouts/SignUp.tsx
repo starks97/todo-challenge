@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { AuthContext } from "../../context";
+import { AuthContext } from "../../context/auth";
 
 export default function SignUp() {
   const router: NextRouter = useRouter();

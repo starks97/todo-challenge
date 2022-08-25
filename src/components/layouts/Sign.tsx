@@ -16,7 +16,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { AuthContext } from "../../context";
+import { AuthContext } from "../../context/auth";
 
 export default function SimpleCard() {
   const router: NextRouter = useRouter();

@@ -19,7 +19,8 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { NavLinks } from "../navbar";
-import { AddTodo, FilterTags, SearchInput } from "../navbar";
+import { FilterTags, SearchInput } from "../navbar";
+import { AddTaskModal } from "../Modal";
 
 type Props = {};
 
@@ -32,7 +33,7 @@ export default function Navbar({}: Props) {
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
-              <AddTodo />
+              <AddTaskModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
               <FilterTags />
               <SearchInput />
             </Stack>

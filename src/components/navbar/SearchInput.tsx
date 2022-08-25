@@ -49,7 +49,7 @@ export default function SearchInput() {
       />
       <Modal onClose={onClose} isOpen={isOpen}>
         {overlay}
-        <ModalContent bg="blackAlpha.500" maxW="35rem" marginTop="5rem">
+        <ModalContent bg="blackAlpha.500" maxW="35rem" marginTop="5rem" alignContent="center">
           <ModalBody>
             <Stack spacing={3}>
               <Input

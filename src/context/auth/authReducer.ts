@@ -1,8 +1,14 @@
-import { AuthState } from "./";
+import { AuthState } from ".";
 import { User } from "@prisma/client";
 
 type AuthActionType =
-  | { type: "[Auth] - Login"; payload: User }
+  | {
+      type: "[Auth] - Login";
+      payload: {
+        user: Omit<User, "password" | "createdAt" | "updatedAt">;
+        token: string;
+      };
+    }
   | { type: "[Auth] - Logout" };
 
 export const authReducer = (
@@ -14,14 +20,14 @@ export const authReducer = (
       return {
         ...state,
         isLoggedIn: true,
-        Context_user: action.payload,
+        auth: action.payload,
       };
 
     case "[Auth] - Logout":
       return {
         ...state,
         isLoggedIn: false,
-        Context_user: undefined,
+        auth: undefined,
       };
 
     default:
