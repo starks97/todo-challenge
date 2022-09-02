@@ -3,24 +3,27 @@ import { Navbar } from "../components/layouts";
 
 import { GetServerSideProps } from "next";
 import { TaskTodo } from "../app/backend/todo";
+import { useState, useEffect } from "react";
 
 type Props = {};
 
 export default function Home({}: Props) {
+  const [domLoaded, setDomLoaded] = useState(false);
+
+  useEffect(() => {
+    setDomLoaded(true);
+    console.log("domloaded");
+  }, []);
   return (
     <>
-      <Navbar />
-      <TaskList  />
+      {domLoaded && (
+        <>
+          <Navbar />
+          <TaskList  />
+        </>
+      )}
     </>
   );
 }
 
-/*export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const data = await TaskTodo.getTodos();
 
-  return {
-    props: {
-      data,
-    },
-  };
-};*/

@@ -1,7 +1,6 @@
 import { createContext } from "react";
-import { ToDo } from "@prisma/client";
 
-export interface TaskProps {
+export interface TodoProps {
   title: string;
   description: string;
   completed: boolean;
@@ -10,8 +9,13 @@ export interface TaskProps {
 }
 
 interface ContextProps {
-  todo: TaskProps[];
-  createTodo: (title: string, description: string, color: string) => Promise<boolean | null>
+  todos: TodoProps[];
+  createTodo: (
+    title: string,
+    description: string,
+    color: string
+  ) => Promise<boolean | null>;
+  deleteTodo: (task: TodoProps) => void;
 }
 
 export const TodoContext = createContext({} as ContextProps);

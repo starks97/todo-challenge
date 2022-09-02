@@ -26,14 +26,14 @@ export default function SimpleCard() {
   const [isLogin, setIsLogin] = useState<boolean>(false);
 
   const [login, setLogin] = useState({
-    username: "",
     password: "",
+    email: "",
   });
 
   const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await loginUser(login.username, login.password);
+      const response = await loginUser(login.password, login.email);
       if (response) {
         setIsLogin(true);
         router.push("/");
@@ -73,9 +73,9 @@ export default function SimpleCard() {
                 <FormLabel>Username</FormLabel>
                 <Input
                   type="username"
-                  value={login.username}
+                  value={login.email}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setLogin({ ...login, username: e.target.value })
+                    setLogin({ ...login, email: e.target.value })
                   }
                 />
               </FormControl>

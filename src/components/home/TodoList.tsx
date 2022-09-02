@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import { Box, Container, Grid, Text } from "@chakra-ui/react";
 
-import TaskCard from "./TaskCard";
-import { ToDo } from "@prisma/client";
+import TaskCard from "./TodoCard";
 
-interface Props  {
-  data: ToDo
-};
+import { TodoContext } from "../../context/todo";
 
 export default function TaskList() {
+  const { todos } = useContext(TodoContext);
   return (
-    <Container maxW="90rem" marginTop="3rem">
+    <Container maxW="90rem" marginTop="3rem" justifyContent="center">
       <Grid
         gridTemplateColumns={{
           base: "repeat(1, 1fr)",
@@ -21,8 +19,12 @@ export default function TaskList() {
           xl: "repeat(4, 1fr)",
         }}
         gridGap={{ base: "1rem", md: "2rem" }}
+        justifyItems={"center"}
+        gap={5}
       >
-        <TaskCard color={""} />
+        {Object.values(todos).map((todo) => (
+          <TaskCard todo={todo} key={todo.id} />
+        ))}
       </Grid>
     </Container>
   );

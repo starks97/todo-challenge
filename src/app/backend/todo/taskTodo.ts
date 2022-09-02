@@ -1,14 +1,11 @@
 import { Prisma, ToDo } from "@prisma/client";
 import PrismaDB from "../../db/conectPrisma";
-import { User } from "@prisma/client";
 
 export default class TaskTodo {
   static async createTodo({
     userId,
     ...task
-  }: Omit<ToDo, "id" | "createdAt" | "updatedAt">): Promise<
-    (ToDo & { User: Omit<User, "password"> }) | null
-  > {
+  }: Omit<ToDo, "id" | "createdAt" | "updatedAt">) {
     const prisma = await PrismaDB.getInstance();
     try {
       if (task) {
@@ -17,8 +14,9 @@ export default class TaskTodo {
             ...task,
             User: { connect: { id: userId } },
           },
+
           include: {
-            User: true,
+            User: false,
           },
         });
         return data;

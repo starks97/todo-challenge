@@ -14,6 +14,8 @@ import {
   Tag,
   Checkbox,
   Flex,
+  List,
+  ListItem,
 } from "@chakra-ui/react";
 import React, { ChangeEvent, useContext, useState } from "react";
 import ColorPicker from "./ColorPicker";
@@ -48,7 +50,7 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
     try {
       setIsCreatedTask(true);
 
-      const response = await createTodo( data.title, data.description, color);
+      const response = await createTodo(data.title, data.description, color);
 
       setIsCreatedTask(false);
       setData({ title: "", description: "", completed: false });
@@ -88,6 +90,7 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
               <FormControl isRequired>
                 <FormLabel>Title</FormLabel>
                 <Input
+                  type="textarea"
                   ref={initialRef}
                   placeholder="Title"
                   value={data.title}
@@ -112,13 +115,7 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
                 display="flex"
                 flexDirection="column"
                 gap="2"
-              >
-                {data.description.length < 0 ? (
-                  ""
-                ) : (
-                  <Checkbox>{data.description}</Checkbox>
-                )}
-              </Box>
+              ></Box>
               <Flex marginTop="2rem">
                 <ColorPicker color={color} setColor={setColor} />
               </Flex>

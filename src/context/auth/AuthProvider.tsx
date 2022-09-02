@@ -26,15 +26,21 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
 
   const checkToken = async () => {
     try {
-      const response = await fetch("/api/auth/validate_token", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        "http://localhost:3000/api/auth/validate_token",
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       if (response.status === 200) {
-        const user = await response.json();
+        const userChecked = await response.json();
+
+        const { user } = userChecked;
+
         dispatch({
           type: "[Auth] - Login",
-          payload: { user: user.user, token: user.token },
+          payload: user,
         });
       }
       return response;
@@ -44,22 +50,23 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   };
 
   const loginUser = async (
-    username: string,
-    password: string
+    password: string,
+    username: string
   ): Promise<boolean> => {
     try {
-      let response = await fetch("/api/auth/login", {
+      let response = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ password, username }),
       });
       if (!response.ok) {
         return false;
       }
       const userLogged = await response.json();
+      const { user } = userLogged;
       dispatch({
         type: "[Auth] - Login",
-        payload: { user: userLogged.user, token: userLogged.token },
+        payload: user,
       });
       return true;
     } catch (err) {
@@ -81,7 +88,9 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       if (!response.ok) {
         return { hasError: true };
       }
-      const user = await response.json();
+      const userRegistered = await response.json();
+
+      const { user } = userRegistered;
       dispatch({
         type: "[Auth] - Login",
         payload: user,
