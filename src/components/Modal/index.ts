@@ -1,3 +1,3 @@
-export { default as AddTaskModal } from "./AddTaskModal";
+export { default as AddTaskModal } from "./AddTodoModal";
 export { default as ColorPicker } from "./ColorPicker";
 

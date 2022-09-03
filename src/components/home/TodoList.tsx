@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Box, Container, Grid, Text } from "@chakra-ui/react";
 
@@ -8,6 +8,7 @@ import { TodoContext } from "../../context/todo";
 
 export default function TaskList() {
   const { todos } = useContext(TodoContext);
+
   return (
     <Container maxW="90rem" marginTop="3rem" justifyContent="center">
       <Grid
@@ -22,8 +23,8 @@ export default function TaskList() {
         justifyItems={"center"}
         gap={5}
       >
-        {Object.values(todos).map((todo) => (
-          <TaskCard todo={todo} key={todo.id} />
+        {todos.map((todo) => (
+          <TaskCard key={todo.id} todo={todo} />
         ))}
       </Grid>
     </Container>

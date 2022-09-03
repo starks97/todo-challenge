@@ -20,7 +20,6 @@ import {
 import React, { ChangeEvent, useContext, useState } from "react";
 import ColorPicker from "./ColorPicker";
 
-import { ToDo } from "@prisma/client";
 import { TodoContext } from "../../context/todo";
 
 interface Props {
@@ -35,7 +34,7 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
 
   const { createTodo } = useContext(TodoContext);
 
-  const [color, setColor] = useState("#ff0000");
+  const [color, setColor] = useState("");
 
   const [isCreatedTask, setIsCreatedTask] = useState<boolean>(false);
 
@@ -73,18 +72,19 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
       </Button>
 
       <Box
+        as={Modal}
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
         isOpen={isOpen}
         onClose={onClose}
-        as={Modal}
         isCentered
+        preserveScrollBarGap
       >
         <ModalOverlay />
         <form onSubmit={handleForm}>
           <ModalContent>
             <Tag bg={color} borderRadius="none" h="0.5rem" />
-            <ModalHeader>Create your task</ModalHeader>
+            <ModalHeader>Create your todo</ModalHeader>
 
             <ModalBody pb={6}>
               <FormControl isRequired>

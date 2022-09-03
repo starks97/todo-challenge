@@ -1,14 +1,12 @@
 import { FC, useReducer, useEffect } from "react";
 import { TodoProps, TodoContext, TodoReducer } from ".";
 
-import Cookie from "js-cookie";
-
 export interface TodoState {
   todos: TodoProps[];
 }
 
 const TODO_INITIAL_STATE: TodoState = {
-  todos: Cookie.get("todo") ? JSON.parse(Cookie.get("todo") || "") : [],
+  todos: [],
 };
 
 export const TodoProvider: FC<{ children: React.ReactNode }> = ({
@@ -17,21 +15,19 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   const [todoState, dispatch] = useReducer(TodoReducer, TODO_INITIAL_STATE);
 
   useEffect(() => {
-    Cookie.set("todo", JSON.stringify(todoState.todos));
-  }, [todoState.todos]);
+    const getTodos = async () => {
+      const response = await fetch("/api/todo/getTodos", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
 
-  useEffect(() => {
-    try {
-      dispatch({
-        type: "[Todo] - LoadTodo from cookies | storage",
-        payload: todoState.todos,
-      });
-    } catch (error) {
-      dispatch({
-        type: "[Todo] - LoadTodo from cookies | storage",
-        payload: [],
-      });
-    }
+      if (!response) return null;
+
+      const { todos } = await response.json();
+
+      dispatch({ type: "[Todo] - LoadTodo from DB | storage", payload: todos });
+    };
+    getTodos();
   }, []);
 
   const createTodo = async (
@@ -65,10 +61,10 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const deleteTodo = (task: TodoProps) => {
+  const deleteTodo = async (todo: TodoProps) => {
     dispatch({
       type: "[Todo] - Delete Todo",
-      payload: task,
+      payload: todo,
     });
   };
 

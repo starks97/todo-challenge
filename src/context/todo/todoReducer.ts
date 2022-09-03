@@ -2,7 +2,7 @@ import { TodoProps, TodoState } from ".";
 
 type TodoActionType =
   | { type: "[Todo] -  Create a todo"; payload: TodoProps[] }
-  | { type: "[Todo] - LoadTodo from cookies | storage"; payload: TodoProps[] }
+  | { type: "[Todo] - LoadTodo from DB | storage"; payload: TodoProps[] }
   | { type: "[Todo] - Delete Todo"; payload: TodoProps };
 
 export const TodoReducer = (
@@ -10,7 +10,7 @@ export const TodoReducer = (
   action: TodoActionType
 ): TodoState => {
   switch (action.type) {
-    case "[Todo] - LoadTodo from cookies | storage":
+    case "[Todo] - LoadTodo from DB | storage":
       return {
         ...state,
         todos: action.payload,

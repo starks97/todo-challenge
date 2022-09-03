@@ -1,6 +1,9 @@
 import { FC, useReducer, useEffect } from "react";
 import { AuthContext, authReducer } from ".";
+
 import { User } from "@prisma/client";
+
+
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -19,6 +22,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
+  
 
   useEffect(() => {
     checkToken();

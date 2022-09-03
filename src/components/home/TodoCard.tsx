@@ -31,6 +31,14 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
 
   const [color, setColor] = useState<string>(todo.color);
 
+  const deleteTd = async () => {
+    const response = await fetch(`/api/todo/deleteTodo/${todo.id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+    return response;
+  };
+
   return (
     <>
       <GridItem w="full">
@@ -86,8 +94,13 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
             <Text>{todo.description}</Text>
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={() => deleteTodo(todo)}>
-              delete
+            <Button
+              mr={3}
+              onClick={() => deleteTd()}
+              bg="#de4237"
+              _hover={{ bg: "#c72f24" }}
+            >
+              Delete
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -37,29 +37,46 @@ export default class TaskTodo {
     return null;
   }
 
-  static async getTodo(id: string): Promise<ToDo | null> {
+  static async getTodo(userId: string) {
     const prisma = await PrismaDB.getInstance();
     try {
-      const data = await prisma.toDo.findUnique({
-        where: { id },
-        include: {
-          User: true,
-        },
-      });
-      return data;
+      if (userId) {
+        const data = await prisma.toDo.findMany({
+          where: {
+            userId: { equals: userId },
+          },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            color: true,
+            userId: true,
+          },
+        });
+
+        if (!data) return null;
+
+        return data;
+      }
+      return null;
     } catch (e) {
       return null;
     } finally {
       await PrismaDB.disconnect();
     }
+    return null;
   }
 
-  static async getTodos(): Promise<ToDo[] | null> {
+  static async getTodos() {
     const prisma = await PrismaDB.getInstance();
     try {
       const data = await prisma.toDo.findMany({
-        include: {
-          User: true,
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          color: true,
+          userId: true,
         },
       });
 
@@ -69,5 +86,26 @@ export default class TaskTodo {
     } finally {
       await PrismaDB.disconnect();
     }
+    return null;
+  }
+
+  static async deleteTodo(id: string) {
+    const prisma = await PrismaDB.getInstance();
+    try {
+      const data = await prisma.toDo.delete({
+        where: { id },
+      });
+
+      if (!data) return null;
+
+      return data;
+
+      return null;
+    } catch (e) {
+      return null;
+    } finally {
+      await PrismaDB.disconnect();
+    }
+    return null;
   }
 }

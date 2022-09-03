@@ -4,12 +4,10 @@ import {
   Box,
   Flex,
   Avatar,
-  Link,
   Button,
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
   MenuDivider,
   useDisclosure,
   useColorModeValue,
@@ -22,25 +20,29 @@ import { NavLinks } from "../navbar";
 import { FilterTags, SearchInput } from "../navbar";
 import { AddTaskModal } from "../Modal";
 
-type Props = {};
-
-export default function Navbar({}: Props) {
+export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box bg={useColorModeValue("#12110f", "gray.700")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <Flex alignItems={"center"}>
-            <Stack direction={"row"} spacing={7}>
+          <Flex
+            alignItems={"center"}
+            sx={{ marginLeft: { base: "none", md: "2rem" } }}
+          >
+            <Stack direction={"row"} spacing={3}>
               <AddTaskModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
               <FilterTags />
               <SearchInput />
             </Stack>
           </Flex>
 
-          <Flex alignItems={"center"}>
-            <Stack direction={"row"} spacing={7}>
+          <Flex
+            alignItems={"center"}
+            sx={{ marginRight: { base: "none", md: "2rem" } }}
+          >
+            <Stack direction={"row"} spacing={5}>
               <Button onClick={toggleColorMode}>
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
