@@ -108,4 +108,36 @@ export default class TaskTodo {
     }
     return null;
   }
+
+  static async updateTodo(
+    id: string,
+    data: Omit<ToDo, "createdAt" | "updatedAt" | "id" | "userId">
+  ) {
+    const prisma = await PrismaDB.getInstance();
+    try {
+      const oldTodo = await prisma.toDo.findUnique({
+        where: { id },
+      });
+      if (!oldTodo) return null;
+
+      const newTodoData = await prisma.toDo.update({
+        where: { id },
+        data: {
+          title: data.title || oldTodo.title,
+          description: data.description || oldTodo.description,
+          color: data.color || oldTodo.color,
+          completed: data.completed || oldTodo.completed,
+        },
+      });
+
+      if (!newTodoData) return null;
+
+      return newTodoData;
+    } catch (e) {
+      console.log(e);
+      return null
+    } finally {
+      await PrismaDB.disconnect();
+    }
+  }
 }

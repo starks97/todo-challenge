@@ -62,14 +62,56 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   };
 
   const deleteTodo = async (todo: TodoProps) => {
-    dispatch({
-      type: "[Todo] - Delete Todo",
-      payload: todo,
-    });
+    try {
+      const response = await fetch(`/api/todo/deleteTodo/?id=${todo.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+      dispatch({
+        type: "[Todo] - Delete Todo",
+        payload: todo,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
+  const updateTodo = async (todo: TodoProps) => {
+    try {
+      const response = await fetch(`/api/todo/update_todo/?id=${todo.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(todo),
+      });
+
+      if (!response.ok) {
+        throw new Error("Something went wrong");
+      }
+      const updateToDo = todoState.todos.map((element) => {
+        if (element.id !== todo.id) return element;
+
+        return element;
+      });
+
+      dispatch({
+        type: "[Todo] - Update Todo",
+        payload: updateToDo,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   };
 
   return (
-    <TodoContext.Provider value={{ ...todoState, createTodo, deleteTodo }}>
+    <TodoContext.Provider
+      value={{ ...todoState, createTodo, deleteTodo, updateTodo }}
+    >
       {children}
     </TodoContext.Provider>
   );

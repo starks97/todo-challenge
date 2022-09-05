@@ -3,7 +3,8 @@ import { TodoProps, TodoState } from ".";
 type TodoActionType =
   | { type: "[Todo] -  Create a todo"; payload: TodoProps[] }
   | { type: "[Todo] - LoadTodo from DB | storage"; payload: TodoProps[] }
-  | { type: "[Todo] - Delete Todo"; payload: TodoProps };
+  | { type: "[Todo] - Delete Todo"; payload: TodoProps }
+  | { type: "[Todo] - Update Todo"; payload: TodoProps[] };
 
 export const TodoReducer = (
   state: TodoState,
@@ -25,6 +26,12 @@ export const TodoReducer = (
       return {
         ...state,
         todos: state.todos.filter((item) => !(item.id === action.payload.id)),
+      };
+
+    case "[Todo] - Update Todo":
+      return {
+        ...state,
+        todos: [...action.payload],
       };
     default:
       return state;

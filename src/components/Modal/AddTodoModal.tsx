@@ -129,6 +129,7 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
                   mr={3}
                   isLoading={isCreatedTask}
                   loadingText="Creating task..."
+                  onClick={onClose}
                 >
                   Create
                 </Button>

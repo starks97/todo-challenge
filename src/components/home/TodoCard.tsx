@@ -17,6 +17,9 @@ import {
   ModalCloseButton,
   ModalFooter,
   Button,
+  Input,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 
 import CounterTask from "../../assets/counterTask.svg";
@@ -25,19 +28,17 @@ import Image from "next/image";
 import { TodoProps, TodoContext } from "../../context/todo";
 
 export default function TaskCard({ todo }: { todo: TodoProps }) {
-  const { deleteTodo } = useContext(TodoContext);
+  const { deleteTodo, updateTodo } = useContext(TodoContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [color, setColor] = useState<string>(todo.color);
 
-  const deleteTd = async () => {
-    const response = await fetch(`/api/todo/deleteTodo/${todo.id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-    return response;
-  };
+  const [data, setData] = useState({
+    title: todo.title,
+    description: todo.description,
+    color: todo.color,
+  });
 
   return (
     <>
@@ -90,13 +91,22 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
           />
 
           <ModalBody>
-            <Text>{todo.title}</Text>
+            <FormControl>
+              <Input
+                type="text"
+                value={data.title}
+                onChange={(e) => setData({ ...data, title: e.target.value })}
+              />
+            </FormControl>
+
             <Text>{todo.description}</Text>
           </ModalBody>
           <ModalFooter>
             <Button
               mr={3}
-              onClick={() => deleteTd()}
+              onClick={() => {
+                deleteTodo(todo), onClose;
+              }}
               bg="#de4237"
               _hover={{ bg: "#c72f24" }}
             >

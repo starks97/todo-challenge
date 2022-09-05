@@ -16,7 +16,7 @@ interface ContextProps {
     color: string
   ) => Promise<boolean | null>;
   deleteTodo: (task: TodoProps) => void;
-  
+  updateTodo: (task: TodoProps) => Promise<null | undefined>;
 }
 
 export const TodoContext = createContext({} as ContextProps);
