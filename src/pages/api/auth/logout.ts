@@ -10,8 +10,7 @@ export default methodSwitcher({
     }
 
     res.status(200).send({
-      statusCode: 200,
-      message: "OK",
+      message: "Logged out successfully",
     });
   },
 });

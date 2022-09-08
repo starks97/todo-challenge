@@ -42,17 +42,13 @@ export default function SignUp() {
       const response = await registerUser(data.username, data.password);
       if (response) {
         setIsRegister(true);
-        router.push("/auth/login");
+        router.push("/");
       }
       return response;
     } catch (e) {
       console.log(e, "error form not valid");
     }
   };
-
-  useEffect(() => {
-    router.prefetch("/auth/login");
-  }, []);
 
   return (
     <Flex

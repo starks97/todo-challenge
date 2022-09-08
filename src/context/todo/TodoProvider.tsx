@@ -1,6 +1,8 @@
 import { FC, useReducer, useEffect } from "react";
 import { TodoProps, TodoContext, TodoReducer } from ".";
 
+import Cookies from "js-cookie";
+
 export interface TodoState {
   todos: TodoProps[];
 }
@@ -16,6 +18,8 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const getTodos = async () => {
+
+      //if(!Cookies.get("token")) return;
       const response = await fetch("/api/todo/getTodos", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -95,7 +99,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
       const updateToDo = todoState.todos.map((element) => {
         if (element.id !== todo.id) return element;
 
-        return element;
+        return todo;
       });
 
       dispatch({

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useContext } from "react";
 
 import {
   Box,
@@ -19,10 +19,35 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { NavLinks } from "../navbar";
 import { FilterTags, SearchInput } from "../navbar";
 import { AddTaskModal } from "../Modal";
+import { AuthContext } from "../../context/auth";
+import { User } from "@prisma/client";
+
+type U =
+  | Partial<Omit<User, "password" | "createdAt" | "updatedAt">>
+  | undefined;
+
+type NoUndefinedField<T> = {
+  [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
+};
+
+type NonNullable<T> = Exclude<T, null | undefined>;
+
+type Z = NoUndefinedField<U>;
 
 export default function Navbar() {
+  const { isLoggedIn, auth } = useContext(AuthContext);
+
+  const gettingTrueResponse = () => {
+    const d: Z = auth?.user;
+
+    return d;
+  };
+
+  console.log(gettingTrueResponse());
+
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
       <Box bg={useColorModeValue("#12110f", "gray.700")} px={4}>
@@ -47,7 +72,7 @@ export default function Navbar() {
                 {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
               </Button>
 
-              <Menu>
+              <Menu preventOverflow>
                 <MenuButton
                   as={Button}
                   rounded={"full"}
@@ -70,13 +95,20 @@ export default function Navbar() {
                   </Center>
                   <br />
                   <Center>
-                    <p>Username</p>
+                    <p></p>
                   </Center>
                   <br />
                   <MenuDivider />
-
-                  <NavLinks children={"Profile"} url={"/auth/login"} />
-                  <NavLinks children={"Log Out"} url={"#"} />
+                  {isLoggedIn ? (
+                    <>
+                      <NavLinks children={"Profile"} url={"/cpanel"} />
+                      <NavLinks children={"Log Out"} url={"#"} />
+                    </>
+                  ) : (
+                    <>
+                      <NavLinks children={"Login"} url={"/auth/login"} />
+                    </>
+                  )}
                 </MenuList>
               </Menu>
             </Stack>

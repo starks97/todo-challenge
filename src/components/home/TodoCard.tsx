@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import {
   Box,
@@ -12,7 +12,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
   ModalBody,
   ModalCloseButton,
   ModalFooter,
@@ -20,15 +19,18 @@ import {
   Input,
   FormControl,
   FormLabel,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 
 import CounterTask from "../../assets/counterTask.svg";
 
 import Image from "next/image";
 import { TodoProps, TodoContext } from "../../context/todo";
+import { EditIcon } from "@chakra-ui/icons";
 
 export default function TaskCard({ todo }: { todo: TodoProps }) {
-  const { deleteTodo, updateTodo } = useContext(TodoContext);
+  const { deleteTodo, updateTodo, todos } = useContext(TodoContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -39,6 +41,16 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
     description: todo.description,
     color: todo.color,
   });
+
+  const handleEdit = () => {
+    const newValues = { ...data, id: todo.id, completed: todo.completed };
+
+    if (todo.title !== data.title && todo.description !== data.description) {
+      updateTodo(newValues);
+    }
+
+    onClose();
+  };
 
   return (
     <>
@@ -79,7 +91,7 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
         </Box>
       </GridItem>
 
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal onClose={handleEdit} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton onClick={onClose} />
@@ -91,21 +103,53 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
           />
 
           <ModalBody>
-            <FormControl>
-              <Input
-                type="text"
-                value={data.title}
-                onChange={(e) => setData({ ...data, title: e.target.value })}
-              />
+            <FormControl marginBottom="1.2rem">
+              <FormLabel
+                color={useColorModeValue("gray.800", "black")}
+                fontSize="lg"
+              >
+                Title
+              </FormLabel>
+              <InputGroup>
+                <Input
+                  type="text"
+                  value={data.title}
+                  fontSize="2xl"
+                  onChange={(e) => setData({ ...data, title: e.target.value })}
+                  border="none"
+                  onKeyPress={(e) => (e.key === "Enter" ? handleEdit() : null)}
+                />
+                <InputLeftElement children={<EditIcon />} />
+              </InputGroup>
             </FormControl>
 
-            <Text>{todo.description}</Text>
+            <FormControl>
+              <FormLabel
+                color={useColorModeValue("gray.800", "black")}
+                fontSize="lg"
+              >
+                Description
+              </FormLabel>
+              <InputGroup>
+                <Input
+                  type="text"
+                  value={data.description}
+                  fontSize="xl"
+                  border="none"
+                  onChange={(e) =>
+                    setData({ ...data, description: e.target.value })
+                  }
+                  onKeyPress={(e) => (e.key === "Enter" ? handleEdit() : null)}
+                />
+                <InputLeftElement children={<EditIcon />} />
+              </InputGroup>
+            </FormControl>
           </ModalBody>
           <ModalFooter>
             <Button
               mr={3}
               onClick={() => {
-                deleteTodo(todo), onClose;
+                deleteTodo(todo);
               }}
               bg="#de4237"
               _hover={{ bg: "#c72f24" }}

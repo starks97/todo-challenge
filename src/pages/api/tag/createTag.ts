@@ -50,7 +50,6 @@ export default methodSwitcher({
       title,
       color,
     });
-    console.log(createTag);
 
     if (!createTag) {
       return res

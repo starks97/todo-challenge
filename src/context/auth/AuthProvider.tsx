@@ -1,28 +1,27 @@
 import { FC, useReducer, useEffect } from "react";
 import { AuthContext, authReducer } from ".";
 
+import Cookies from "js-cookie";
+
 import { User } from "@prisma/client";
-
-
 
 export interface AuthState {
   isLoggedIn: boolean;
-  auth?: {
-    user: Omit<User, "password" | "createdAt" | "updatedAt">;
+  auth: {
+    user: Omit<User, "password" | "createdAt" | "updatedAt"> ;
     token: string;
-  };
+  } | null;
 }
 
 const AUTH_INITIAL_STATE: AuthState = {
   isLoggedIn: false,
-  auth: undefined,
+  auth: null,
 };
 
 export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
-  
 
   useEffect(() => {
     checkToken();
@@ -40,11 +39,11 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       if (response.status === 200) {
         const userChecked = await response.json();
 
-        const { user } = userChecked;
+        const { auth } = userChecked;
 
         dispatch({
           type: "[Auth] - Login",
-          payload: user,
+          payload: auth,
         });
       }
       return response;
@@ -67,10 +66,10 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         return false;
       }
       const userLogged = await response.json();
-      const { user } = userLogged;
+      const { auth } = userLogged;
       dispatch({
         type: "[Auth] - Login",
-        payload: user,
+        payload: auth,
       });
       return true;
     } catch (err) {
@@ -94,10 +93,10 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       }
       const userRegistered = await response.json();
 
-      const { user } = userRegistered;
+      const { auth } = userRegistered;
       dispatch({
         type: "[Auth] - Login",
-        payload: user,
+        payload: auth,
       });
       return { hasError: false };
     } catch (err) {

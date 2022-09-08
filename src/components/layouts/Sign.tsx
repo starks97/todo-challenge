@@ -27,13 +27,13 @@ export default function SimpleCard() {
 
   const [login, setLogin] = useState({
     password: "",
-    email: "",
+    username: "",
   });
 
   const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await loginUser(login.password, login.email);
+      const response = await loginUser(login.password, login.username);
       if (response) {
         setIsLogin(true);
         router.push("/");
@@ -45,7 +45,7 @@ export default function SimpleCard() {
   };
 
   useEffect(() => {
-    router.prefetch("/");
+    router.prefetch("/")
   }, []);
   return (
     <Flex
@@ -73,9 +73,9 @@ export default function SimpleCard() {
                 <FormLabel>Username</FormLabel>
                 <Input
                   type="username"
-                  value={login.email}
+                  value={login.username}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setLogin({ ...login, email: e.target.value })
+                    setLogin({ ...login, username: e.target.value })
                   }
                 />
               </FormControl>

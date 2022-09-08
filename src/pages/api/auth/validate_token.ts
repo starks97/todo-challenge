@@ -1,9 +1,21 @@
 import { methodSwitcher } from "../../../app/backend/utils";
 import { UserAuth } from "../../../app/backend/auth";
 import GenerateJWT from "../../../app/backend/auth/jwt";
+import { NextApiResponse } from "next";
+
+type Data =
+  | { message: string }
+  | {
+      token: string;
+      auth: {
+        id: string;
+        username: string;
+        isAdmin: boolean;
+      };
+    };
 
 export default methodSwitcher({
-  GET: async (req, res) => {
+  GET: async (req, res: NextApiResponse<Data>) => {
     const { token = "" } = req.cookies;
     if (!token) {
       res.statusCode = 404;
@@ -25,24 +37,23 @@ export default methodSwitcher({
         await decoded,
         user.username
       ).generateJWT();
-      if (!token) {
+
+      if (!new_token) {
         res.statusCode = 404;
         res.send({ message: "invalid token" });
         return;
       }
 
       return res.status(200).json({
-        statusCode: 200,
-        message: "OK",
         token: new_token,
-        user: {
+        auth: {
           id,
           username,
           isAdmin,
         },
       });
     } catch (err) {
-      return res.status(401).send({ code: 401, message: "Unauthorized" });
+      return res.status(401).send({ message: "Unauthorized" });
     }
   },
 });
