@@ -111,7 +111,7 @@ export default class TaskTodo {
 
   static async updateTodo(
     id: string,
-    data: Omit<ToDo, "createdAt" | "updatedAt" | "id" | "userId">
+    data: Omit<ToDo, "createdAt" | "updatedAt" | "id" | "userId"| "tagIds">
   ) {
     const prisma = await PrismaDB.getInstance();
     try {

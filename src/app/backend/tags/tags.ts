@@ -2,7 +2,7 @@ import { Prisma, Tag } from "@prisma/client";
 import PrismaDB from "../../db/conectPrisma";
 
 export default class Tags {
-  static async createTag({ userId, ...tag }: Omit<Tag, "id"| "toDoId">) {
+  static async createTag({ userId, ...tag }: Omit<Tag, "id" | "toDoId">) {
     const prisma = await PrismaDB.getInstance();
     try {
       if (tag) {

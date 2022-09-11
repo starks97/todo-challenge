@@ -6,7 +6,6 @@ import { NextApiResponse } from "next";
 type Data =
   | { message: string }
   | {
-      token: string;
       auth: {
         id: string;
         username: string;
@@ -27,6 +26,7 @@ export default methodSwitcher({
         password = "",
         username = "",
       }: { password: string; username: string } = req.body;
+      console.log(req.body);
 
       const user = await UserAuth.login(password, username);
       if (!user) {
@@ -53,7 +53,6 @@ export default methodSwitcher({
       );
 
       return res.status(200).json({
-        token,
         auth: {
           id,
           username,

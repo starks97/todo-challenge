@@ -4,10 +4,7 @@ import { User } from "@prisma/client";
 type AuthActionType =
   | {
       type: "[Auth] - Login";
-      payload: {
-        user: Omit<User, "password" | "createdAt" | "updatedAt">;
-        token: string;
-      };
+      payload: Omit<User, "password" | "createdAt" | "updatedAt"> | null;
     }
   | { type: "[Auth] - Logout" };
 

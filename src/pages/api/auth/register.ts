@@ -6,7 +6,6 @@ import { NextApiResponse } from "next";
 type Data =
   | { message: string }
   | {
-      token: string;
       auth: {
         id: string;
         username: string;
@@ -55,7 +54,13 @@ export default methodSwitcher({
 
       const { id, isAdmin } = registerUser;
 
-      return res.status(200).json({ token, auth: { id, username, isAdmin } });
+      return res.status(200).json({
+        auth: {
+          id,
+          username,
+          isAdmin,
+        },
+      });
     } catch (e) {
       console.log(e);
     }

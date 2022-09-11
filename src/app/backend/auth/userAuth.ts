@@ -50,6 +50,7 @@ export class UserAuth {
       }
     } catch (err) {
       console.error(err);
+      return null
     } finally {
       await PrismaDB.disconnect();
     }
@@ -83,6 +84,7 @@ export class UserAuth {
       }
     } catch (err) {
       console.log(err);
+      return null
     }
     return null;
   }

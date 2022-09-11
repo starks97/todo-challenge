@@ -2,7 +2,14 @@ import { FC, useReducer, useEffect, useContext } from "react";
 import { TodoProps, TodoContext, TodoReducer } from ".";
 
 import { AuthContext } from "../auth";
-import { handleCreateTodo_from_DB, handleCreateTodo_from_LS } from "./utils";
+import {
+  handleCreateTodo_from_DB,
+  handleCreateTodo_from_LS,
+  handleDeleteTodo_from_DB,
+  handleDeleteTodo_from_Ls,
+  handleUpdateTodo_from_DB,
+  handleUpdateTodo_from_Ls,
+} from "./utils";
 
 export interface TodoState {
   todos: TodoProps[];
@@ -70,50 +77,27 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   };
 
   const deleteTodo = async (todo: TodoProps) => {
-    try {
-      const response = await fetch(`/api/todo/deleteTodo/?id=${todo.id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      dispatch({
-        type: "[Todo] - Delete Todo",
-        payload: todo,
-      });
-    } catch (e) {
-      console.log(e);
-      return null;
+    if (!auth) {
+      return handleDeleteTodo_from_Ls({ dispatch, ...todo });
     }
+
+    const response = await handleDeleteTodo_from_DB({ dispatch, ...todo });
+
+    return response;
   };
 
   const updateTodo = async (todo: TodoProps) => {
-    try {
-      const response = await fetch(`/api/todo/update_todo/?id=${todo.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(todo),
-      });
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-      const updateToDo = todoState.todos.map((element) => {
-        if (element.id !== todo.id) return element;
-
-        return todo;
-      });
-
-      dispatch({
-        type: "[Todo] - Update Todo",
-        payload: updateToDo,
-      });
-    } catch (e) {
-      console.log(e);
-      return null;
+    if (!auth) {
+      return handleUpdateTodo_from_Ls({ dispatch, todoState, ...todo });
     }
+
+    const response = await handleUpdateTodo_from_DB({
+      dispatch,
+      todoState,
+      ...todo,
+    });
+
+    return response;
   };
 
   return (

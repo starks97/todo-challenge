@@ -1,15 +1,8 @@
-import { Dispatch } from "react";
 import { generateId } from "../../../app/backend/utils";
-import { TodoState } from "../TodoProvider";
-import { TodoActionType } from "../todoReducer";
 
-interface Props {
-  title: string;
-  description: string;
-  color: string;
-  dispatch: Dispatch<TodoActionType>;
-  todoState: TodoState;
-}
+import { TodoProps } from "../TodoContext";
+
+import { Props, TodoWithActionOptions, TodoActionState } from ".";
 
 export const handleCreateTodo_from_LS = ({
   title,
@@ -37,6 +30,55 @@ export const handleCreateTodo_from_LS = ({
       payload: [...todoState.todos, todoCreated],
     });
 
+    return true;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const handleDeleteTodo_from_Ls = ({
+  dispatch,
+  ...todo
+}: TodoWithActionOptions) => {
+  try {
+    const todos = JSON.parse(localStorage.getItem("todos") || "[]");
+
+    const newTodos = todos.filter((t: TodoProps) => t.id !== todo.id);
+
+    localStorage.setItem("todos", JSON.stringify(newTodos));
+
+    dispatch({
+      type: "[Todo] - Delete Todo",
+      payload: todo,
+    });
+
+    return true;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const handleUpdateTodo_from_Ls = ({
+  dispatch,
+  todoState,
+  ...todo
+}: TodoActionState) => {
+  try {
+    const newTodos = todoState.todos.map((t: TodoProps) => {
+      if (t.id === todo.id) {
+        return todo;
+      }
+      return t;
+    });
+
+    localStorage.setItem("todos", JSON.stringify(newTodos));
+
+    dispatch({
+      type: "[Todo] - Update Todo",
+      payload: newTodos,
+    });
     return true;
   } catch (e) {
     console.log(e);

@@ -2,13 +2,21 @@ import { Dispatch } from "react";
 import { TodoProps } from "../TodoContext";
 import { TodoState } from "../TodoProvider";
 
-import { TodoActionType, TodoReducer } from "../todoReducer";
+import { TodoActionType } from "../todoReducer";
 
-interface Props {
+export interface Props {
   title: string;
   description: string;
   color: string;
   dispatch: Dispatch<TodoActionType>;
+  todoState: TodoState;
+}
+
+export interface TodoWithActionOptions extends TodoProps {
+  dispatch: Dispatch<TodoActionType>;
+}
+
+export interface TodoActionState extends TodoWithActionOptions {
   todoState: TodoState;
 }
 
@@ -46,4 +54,58 @@ export const handleCreateTodo_from_DB = async ({
   }
 };
 
+export const handleDeleteTodo_from_DB = async ({
+  dispatch,
+  ...todo
+}: TodoWithActionOptions) => {
+  try {
+    const response = await fetch(`/api/todo/deleteTodo/?id=${todo.id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
 
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+    dispatch({
+      type: "[Todo] - Delete Todo",
+      payload: todo,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const handleUpdateTodo_from_DB = async ({
+  dispatch,
+  todoState,
+  ...todo
+}: TodoActionState) => {
+  try {
+    const response = await fetch(`/api/todo/update_todo/?id=${todo.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(todo),
+    });
+
+    if (!response.ok) {
+      throw new Error("Something went wrong");
+    }
+    const updateToDo = todoState.todos.map((element) => {
+      if (element.id !== todo.id) return element;
+
+      return todo;
+    });
+
+    dispatch({
+      type: "[Todo] - Update Todo",
+      payload: updateToDo,
+    });
+    return true;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
