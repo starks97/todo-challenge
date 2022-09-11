@@ -78,4 +78,34 @@ export default class Tags {
       await PrismaDB.disconnect();
     }
   }
+
+  static async getTag(userId: string) {
+    const prisma = await PrismaDB.getInstance();
+
+    try {
+      if (userId) {
+        const data = await prisma.tag.findMany({
+          where: {
+            userId: { equals: userId },
+          },
+          select: {
+            id: true,
+            title: true,
+            color: true,
+            userId: true,
+          },
+        });
+
+        if (!data) return null;
+
+        return data;
+      }
+      return null;
+    } catch (e) {
+      console.log(e);
+      return null;
+    } finally {
+      await PrismaDB.disconnect();
+    }
+  }
 }

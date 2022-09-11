@@ -1,6 +1,6 @@
 import { TodoProps, TodoState } from ".";
 
-type TodoActionType =
+export type TodoActionType =
   | { type: "[Todo] -  Create a todo"; payload: TodoProps[] }
   | { type: "[Todo] - LoadTodo from DB | storage"; payload: TodoProps[] }
   | { type: "[Todo] - Delete Todo"; payload: TodoProps }

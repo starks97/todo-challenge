@@ -7,10 +7,7 @@ import { User } from "@prisma/client";
 
 export interface AuthState {
   isLoggedIn: boolean;
-  auth: {
-    user: Omit<User, "password" | "createdAt" | "updatedAt"> ;
-    token: string;
-  } | null;
+  auth: Omit<User, "password" | "createdAt" | "updatedAt"> | null;
 }
 
 const AUTH_INITIAL_STATE: AuthState = {
@@ -28,6 +25,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const checkToken = async () => {
+    if (!Cookies.get("token")) return;
     try {
       const response = await fetch(
         "http://localhost:3000/api/auth/validate_token",
@@ -49,6 +47,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       return response;
     } catch (err) {
       console.log(err, "user not authenticated");
+      return null;
     }
   };
 

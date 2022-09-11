@@ -22,28 +22,8 @@ import { AddTaskModal } from "../Modal";
 import { AuthContext } from "../../context/auth";
 import { User } from "@prisma/client";
 
-type U =
-  | Partial<Omit<User, "password" | "createdAt" | "updatedAt">>
-  | undefined;
-
-type NoUndefinedField<T> = {
-  [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
-};
-
-type NonNullable<T> = Exclude<T, null | undefined>;
-
-type Z = NoUndefinedField<U>;
-
 export default function Navbar() {
   const { isLoggedIn, auth } = useContext(AuthContext);
-
-  const gettingTrueResponse = () => {
-    const d: Z = auth?.user;
-
-    return d;
-  };
-
-  console.log(gettingTrueResponse());
 
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -95,7 +75,7 @@ export default function Navbar() {
                   </Center>
                   <br />
                   <Center>
-                    <p></p>
+                    <p>{auth?.username}</p>
                   </Center>
                   <br />
                   <MenuDivider />

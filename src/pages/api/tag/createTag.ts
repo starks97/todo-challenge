@@ -32,7 +32,6 @@ export default methodSwitcher({
     }
 
     const decoded = await GenerateJWT.decoded(token);
-    console.log(decoded);
 
     const {
       title = "",
@@ -44,21 +43,21 @@ export default methodSwitcher({
       toDoId: string;
     } = req.body;
 
-    const createTag: Z = await Tags.createTag({
+    const tag: Z = await Tags.createTag({
       userId: decoded,
       toDoId,
       title,
       color,
     });
 
-    if (!createTag) {
+    if (!tag) {
       return res
         .status(400)
         .send({ code: 400, message: "it can not create a tag" });
     }
 
     return res.status(200).json({
-      createTag,
+      tag,
     });
   },
 });

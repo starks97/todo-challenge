@@ -1,4 +1,5 @@
-import { AddIcon } from "@chakra-ui/icons";
+import React, { ChangeEvent, useContext, useState } from "react";
+
 import {
   Input,
   Modal,
@@ -14,11 +15,12 @@ import {
   Tag,
   Flex,
 } from "@chakra-ui/react";
-import React, { ChangeEvent, useContext, useState } from "react";
-import ColorPicker from "./ColorPicker";
 
+import { AddIcon } from "@chakra-ui/icons";
+
+import ColorPicker from "./ColorPicker";
+import { TagContext } from "../../context/tag";
 import { TodoContext } from "../../context/todo";
-import { AuthContext } from "../../context/auth";
 
 interface Props {
   isOpen: boolean;
@@ -26,39 +28,31 @@ interface Props {
   onClose: () => void;
 }
 
-export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
+export default function AddTagModal({ isOpen, onOpen, onClose }: Props) {
+  const { createTag } = useContext(TagContext);
+
   const initialRef = React.useRef(null);
+
   const finalRef = React.useRef(null);
-
-  const { createTodo } = useContext(TodoContext);
-
-  const { isLoggedIn } = useContext(AuthContext);
 
   const [color, setColor] = useState("");
 
-  const [isCreatedTask, setIsCreatedTask] = useState<boolean>(false);
+  const [isCreatedTag, setIsCreatedTag] = useState<boolean>(false);
 
   const [data, setData] = useState({
     title: "",
-    description: "",
-    completed: false,
+    toDoId: "",
   });
-
-  const dic = {
-    title: "title",
-    description: "description",
-    
-  }
 
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      setIsCreatedTask(true);
+      setIsCreatedTag(true);
 
-      const response = await createTodo(data.title, data.description, color);
+      const response = await createTag(data.title, color, data.toDoId);
 
-      setIsCreatedTask(false);
-      setData({ title: "", description: "", completed: false });
+      setIsCreatedTag(false);
+      setData({ title: "", toDoId: "" });
 
       if (!response) {
         throw new Error("Something went wrong");
@@ -69,7 +63,6 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
       console.log(e);
     }
   };
-
   return (
     <>
       <Button onClick={onOpen}>
@@ -90,7 +83,7 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
         <form onSubmit={handleForm}>
           <ModalContent>
             <Tag bg={color} borderRadius="none" h="0.5rem" />
-            <ModalHeader>Create your todo</ModalHeader>
+            <ModalHeader>Create your Tag</ModalHeader>
 
             <ModalBody pb={6}>
               <FormControl isRequired>
@@ -106,22 +99,6 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
                 />
               </FormControl>
 
-              <FormControl mt={4} isRequired>
-                <FormLabel>Description</FormLabel>
-                <Input
-                  placeholder="Description"
-                  value={data.description}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setData({ ...data, description: e.target.value })
-                  }
-                />
-              </FormControl>
-              <Box
-                marginTop={"2rem"}
-                display="flex"
-                flexDirection="column"
-                gap="2"
-              ></Box>
               <Flex marginTop="2rem">
                 <ColorPicker color={color} setColor={setColor} />
               </Flex>
@@ -133,7 +110,7 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
                   type="submit"
                   colorScheme="blue"
                   mr={3}
-                  isLoading={isCreatedTask}
+                  isLoading={isCreatedTag}
                   loadingText="Creating task..."
                   onClick={onClose}
                 >

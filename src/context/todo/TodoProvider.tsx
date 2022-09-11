@@ -1,7 +1,8 @@
-import { FC, useReducer, useEffect } from "react";
+import { FC, useReducer, useEffect, useContext } from "react";
 import { TodoProps, TodoContext, TodoReducer } from ".";
 
-import Cookies from "js-cookie";
+import { AuthContext } from "../auth";
+import { handleCreateTodo_from_DB, handleCreateTodo_from_LS } from "./utils";
 
 export interface TodoState {
   todos: TodoProps[];
@@ -15,11 +16,21 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [todoState, dispatch] = useReducer(TodoReducer, TODO_INITIAL_STATE);
+  const { auth } = useContext(AuthContext);
 
   useEffect(() => {
-    const getTodos = async () => {
+    if (!auth) {
+      const todos = localStorage.getItem("todos") || "[]";
+      if (todos) {
+        dispatch({
+          type: "[Todo] - LoadTodo from DB | storage",
+          payload: JSON.parse(todos),
+        });
+      }
+      return;
+    }
 
-      //if(!Cookies.get("token")) return;
+    const getTodos = async () => {
       const response = await fetch("/api/todo/getTodos", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -32,37 +43,27 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
       dispatch({ type: "[Todo] - LoadTodo from DB | storage", payload: todos });
     };
     getTodos();
-  }, []);
+  }, [auth]);
 
   const createTodo = async (
     title: string,
     description: string,
     color: string
-  ): Promise<boolean | null> => {
-    try {
-      const response = await fetch("/api/todo/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, color }),
-      });
+  ) => {
+    const args = {
+      title,
+      description,
+      color,
+      dispatch,
+      todoState,
+    };
 
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
-
-      const todoCreated = await response.json();
-
-      const { task } = todoCreated;
-
-      dispatch({
-        type: "[Todo] -  Create a todo",
-        payload: [...todoState.todos, { ...task }],
-      });
-      return true;
-    } catch (e) {
-      console.log(e);
-      return null;
+    if (!auth) {
+      return handleCreateTodo_from_LS(args);
     }
+    const response = await handleCreateTodo_from_DB(args);
+
+    return response;
   };
 
   const deleteTodo = async (todo: TodoProps) => {

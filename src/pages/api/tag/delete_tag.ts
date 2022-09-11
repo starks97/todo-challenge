@@ -6,7 +6,7 @@ import { Tag, ToDo } from "@prisma/client";
 
 export default methodSwitcher({
   DELETE: (req, res) => {
-    const { id = "6316108acc50eaf4b8604ab1" } = req.query;
+    const { id = "" } = req.query;
     const tag = Tags.deleteTag(`${id}`);
     if (!tag) {
       res.statusCode = 404;

@@ -2,10 +2,6 @@ import { methodSwitcher } from "../../../app/backend/utils";
 
 import { Tags } from "../../../app/backend/tags";
 
-import GenerateJWT from "../../../app/backend/auth/jwt";
-
-import { Tag, ToDo } from "@prisma/client";
-
 export default methodSwitcher({
   PUT: async (req, res) => {
     if (!req.body || typeof req.body !== "object") {

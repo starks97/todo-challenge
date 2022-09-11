@@ -17,6 +17,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { AuthContext } from "../../context/auth";
+import { ErrorMessages } from "../errors";
 
 export default function SimpleCard() {
   const router: NextRouter = useRouter();
@@ -24,6 +25,8 @@ export default function SimpleCard() {
   const { loginUser } = useContext(AuthContext);
 
   const [isLogin, setIsLogin] = useState<boolean>(false);
+
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [login, setLogin] = useState({
     password: "",
@@ -34,10 +37,19 @@ export default function SimpleCard() {
     e.preventDefault();
     try {
       const response = await loginUser(login.password, login.username);
-      if (response) {
-        setIsLogin(true);
-        router.push("/");
+
+      if (!response) {
+        setErrorMessage("There was a problem");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 4000);
+        setIsLogin(false);
+        return;
       }
+
+      router.push("/");
+      setIsLogin(true);
+
       return response;
     } catch (err) {
       console.log(err, "login not authenticated");
@@ -45,7 +57,7 @@ export default function SimpleCard() {
   };
 
   useEffect(() => {
-    router.prefetch("/")
+    router.prefetch("/");
   }, []);
   return (
     <Flex
@@ -61,6 +73,7 @@ export default function SimpleCard() {
             to enjoy all of our cool <Link color={"blue.400"}>features</Link> ✌️
           </Text>
         </Stack>
+
         <Box
           rounded={"lg"}
           bg={useColorModeValue("white", "gray.700")}
@@ -115,6 +128,13 @@ export default function SimpleCard() {
               </Stack>
             </form>
           </Stack>
+          {errorMessage && (
+            <ErrorMessages
+              children={
+                "There was a problem with your password or username. Please try again"
+              }
+            />
+          )}
         </Box>
       </Stack>
     </Flex>

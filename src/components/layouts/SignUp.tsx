@@ -21,6 +21,7 @@ import {
 import { ChangeEvent, useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { AuthContext } from "../../context/auth";
+import { ErrorMessages } from "../errors";
 
 export default function SignUp() {
   const router: NextRouter = useRouter();
@@ -31,6 +32,8 @@ export default function SignUp() {
 
   const [isRegister, setIsRegister] = useState<boolean>(false);
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const [data, setData] = useState({
     username: "",
     password: "",
@@ -40,10 +43,16 @@ export default function SignUp() {
     e.preventDefault();
     try {
       const response = await registerUser(data.username, data.password);
-      if (response) {
-        setIsRegister(true);
-        router.push("/");
+      if (response.hasError) {
+        setIsRegister(false);
+        setErrorMessage("there was a problem");
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 5000);
+        return;
       }
+      setIsRegister(true);
+      router.push("/");
       return response;
     } catch (e) {
       console.log(e, "error form not valid");
@@ -133,6 +142,13 @@ export default function SignUp() {
               </Stack>
             </form>
           </Stack>
+          {errorMessage && (
+            <ErrorMessages
+              children={
+                "The username that you entered, its already in use. Please try again with a different username"
+              }
+            />
+          )}
         </Box>
       </Stack>
     </Flex>

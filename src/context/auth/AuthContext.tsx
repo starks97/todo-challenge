@@ -3,10 +3,8 @@ import { User } from "@prisma/client";
 
 export interface ContextProps {
   isLoggedIn: boolean;
-  auth: {
-    user: Omit<User, "password" | "createdAt" | "updatedAt">;
-    token: string;
-  } | null;
+  auth: Omit<User, "password" | "createdAt" | "updatedAt"> | null;
+
   loginUser: (username: string, password: string) => Promise<boolean>;
   registerUser: (
     username: string,

@@ -1,6 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 
-import { Box, Container, Grid, Text } from "@chakra-ui/react";
+import { Container, Grid } from "@chakra-ui/react";
+
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import TaskCard from "./TodoCard";
 
@@ -23,7 +25,7 @@ export default function TaskList() {
         justifyItems={"center"}
         gap={5}
       >
-        {todos.map((todo) => (
+        {todos?.map((todo) => (
           <TaskCard key={todo.id} todo={todo} />
         ))}
       </Grid>

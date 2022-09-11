@@ -49,7 +49,7 @@ export default methodSwitcher({
       //set token in cookie
       res.setHeader(
         "Set-Cookie",
-        `token=${token}; Path=/; HttpOnly; Expires=${expires}; SameSite=Strict`
+        `token=${token}; Path=/; Expires=${expires}; SameSite=Strict`
       );
 
       return res.status(200).json({
