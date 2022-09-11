@@ -25,7 +25,7 @@ export default function TaskList() {
         justifyItems={"center"}
         gap={5}
       >
-        {todos?.map((todo) => (
+        {todos.map((todo) => (
           <TaskCard key={todo.id} todo={todo} />
         ))}
       </Grid>

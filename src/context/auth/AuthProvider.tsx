@@ -1,4 +1,4 @@
-import { FC, useReducer, useEffect } from "react";
+import { FC, useReducer, useEffect, useState } from "react";
 import { AuthContext, authReducer } from ".";
 
 import Cookies from "js-cookie";
@@ -20,12 +20,16 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
 }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     checkToken();
   }, []);
 
   const checkToken = async () => {
-    if (!Cookies.get("token")) return;
+    if (!Cookies.get("token")) {
+      return setIsLoading(false);
+    }
     try {
       const response = await fetch(
         "http://localhost:3000/api/auth/validate_token",
@@ -44,9 +48,12 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
           payload: auth,
         });
       }
+
+      setIsLoading(false);
       return response;
     } catch (err) {
       console.log(err, "user not authenticated");
+      setIsLoading(false);
       return null;
     }
   };
@@ -108,6 +115,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     <AuthContext.Provider
       value={{
         ...state,
+        isLoading,
 
         // Methods
         loginUser,

@@ -40,8 +40,7 @@ export const TagProvider: FC<{ children: React.ReactNode }> = ({
 
   const createTag = async (
     title: string,
-    color: string,
-    toDoId: string
+    color: string
   ): Promise<boolean | null> => {
     try {
       const response = await fetch("/api/tag/createTag", {
@@ -50,7 +49,6 @@ export const TagProvider: FC<{ children: React.ReactNode }> = ({
         body: JSON.stringify({
           title,
           color,
-          toDoId: "631175d58881abf7f18d8159",
         }),
       });
 

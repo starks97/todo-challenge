@@ -9,11 +9,7 @@ export interface TagProps {
 
 interface ContextProps {
   tag: TagProps[];
-  createTag: (
-    title: string,
-    color: string,
-    userId: string
-  ) => Promise<boolean | null>;
+  createTag: (title: string, color: string) => Promise<boolean | null>;
   deleteTag: (tag: TagProps) => Promise<boolean | null>;
   updateTag: (tag: TagProps) => Promise<boolean | null>;
 }

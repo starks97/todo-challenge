@@ -34,8 +34,8 @@ model Tag {
   User   User   @relation(fields: [userId], references: [id])
   userId String @db.ObjectId
 
-  ToDo   ToDo?   @relation(fields: [toDoId], references: [id])
-  toDoId String? @db.ObjectId
+  Todos  ToDo[]   @relation(fields: [toDoId], references: [id])
+  toDoId String[] @db.ObjectId
 }
 
 model Check {
@@ -61,7 +61,8 @@ model ToDo {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now())
   // -- Relations
-  tags        Tag[]
+  tags        Tag[]    @relation(fields: [tagIds], references: [id])
+  tagIds      String[] @db.ObjectId
   checks      Check[]
   // -- Relations
   User        User     @relation(fields: [userId], references: [id])

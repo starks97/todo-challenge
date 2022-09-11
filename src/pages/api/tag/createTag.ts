@@ -5,17 +5,13 @@ import { Tags } from "../../../app/backend/tags";
 import GenerateJWT from "../../../app/backend/auth/jwt";
 import { Tag, ToDo } from "@prisma/client";
 
-type R =
-  | (Tag & {
-      ToDo: ToDo;
-    })
-  | null;
+type CreateTagRequest = (Tag & {}) | null;
 
 type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
 };
 
-type Z = NoUndefinedField<R>;
+type WithOutUndefined = NoUndefinedField<CreateTagRequest>;
 
 export default methodSwitcher({
   POST: async (req, res) => {
@@ -36,16 +32,13 @@ export default methodSwitcher({
     const {
       title = "",
       color = "",
-      toDoId = "",
     }: {
       title: string;
       color: string;
-      toDoId: string;
     } = req.body;
 
-    const tag: Z = await Tags.createTag({
+    const tag: WithOutUndefined = await Tags.createTag({
       userId: decoded,
-      toDoId,
       title,
       color,
     });

@@ -2,22 +2,20 @@ import { Prisma, Tag } from "@prisma/client";
 import PrismaDB from "../../db/conectPrisma";
 
 export default class Tags {
-  static async createTag({ toDoId, userId, ...tag }: Omit<Tag, "id">) {
+  static async createTag({ userId, ...tag }: Omit<Tag, "id"| "toDoId">) {
     const prisma = await PrismaDB.getInstance();
     try {
       if (tag) {
         const dataTag = await prisma.tag.create({
           data: {
             ...tag,
-            ToDo: { connect: { id: toDoId } },
             User: { connect: { id: userId } },
           },
           include: {
-            ToDo: true,
             User: false,
           },
         });
-        console.log(dataTag);
+
         return dataTag;
       }
       if (!tag) return null;

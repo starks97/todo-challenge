@@ -29,16 +29,13 @@ export default function TagCard({ tag }: { tag: TagProps }) {
 
   const [color, setColor] = useState<string>(tag.color);
 
-  const [data, setData] = useState({
-    title: tag.title,
-    color,
-  });
+  const [title, setTitle] = useState<string>(tag.title);
 
   const handleEdit = () => {
-    const newValues = { ...data, id: tag.id, userId: tag.userId, color };
+    const newValues = { title, id: tag.id, userId: tag.userId, color };
 
-    if (tag.title !== data.title) {
-      return updateTag(newValues);
+    if (tag.title !== title || tag.color !== color) {
+      updateTag(newValues);
     }
 
     onClose();
@@ -77,16 +74,16 @@ export default function TagCard({ tag }: { tag: TagProps }) {
               <InputGroup>
                 <Input
                   type="text"
-                  value={data.title}
+                  value={title}
                   fontSize="2xl"
-                  onChange={(e) => setData({ ...data, title: e.target.value })}
+                  onChange={(e) => setTitle(e.target.value)}
                   border="none"
                 />
                 <InputLeftElement children={<EditIcon />} />
               </InputGroup>
             </FormControl>
 
-            <ColorPicker color={data.color} setColor={setColor} />
+            <ColorPicker color={color} setColor={setColor} />
           </ModalBody>
           <ModalFooter>
             <Button

@@ -38,6 +38,7 @@ export default methodSwitcher({
       completed,
       color,
       userId: decoded,
+      tagIds: [],
     });
 
     if (!task) {

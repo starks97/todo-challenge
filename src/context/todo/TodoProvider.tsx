@@ -16,9 +16,11 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [todoState, dispatch] = useReducer(TodoReducer, TODO_INITIAL_STATE);
-  const { auth } = useContext(AuthContext);
+  const { auth, isLoading } = useContext(AuthContext);
 
   useEffect(() => {
+    if (isLoading) return;
+
     if (!auth) {
       const todos = localStorage.getItem("todos") || "[]";
       if (todos) {
@@ -42,8 +44,9 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
 
       dispatch({ type: "[Todo] - LoadTodo from DB | storage", payload: todos });
     };
+
     getTodos();
-  }, [auth]);
+  }, [auth, isLoading]);
 
   const createTodo = async (
     title: string,

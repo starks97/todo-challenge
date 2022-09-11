@@ -45,7 +45,7 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
   const handleEdit = () => {
     const newValues = { ...data, id: todo.id, completed: todo.completed };
 
-    if (todo.title !== data.title && todo.description !== data.description) {
+    if (todo.title !== data.title || todo.description !== data.description) {
       updateTodo(newValues);
     }
 
@@ -69,7 +69,6 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
             borderBottomStartRadius={0}
           />
           <Stack
-            textAlign={"center"}
             p={6}
             color={useColorModeValue("gray.800", "white")}
             align={"start"}
