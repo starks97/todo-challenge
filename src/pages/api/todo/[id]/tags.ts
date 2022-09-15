@@ -1,6 +1,6 @@
 import { methodSwitcher } from "../../../../app/backend/utils";
 
-import { TaskTodo } from "../../../../app/backend/todo";
+import { Todo } from "../../../../app/backend/todo";
 import { NextApiRequest } from "next";
 
 export default methodSwitcher({
@@ -14,7 +14,7 @@ export default methodSwitcher({
 
     const { tagIds } = req.body as { tagIds: string[] };
 
-    const data = await TaskTodo.setTags(id, tagIds);
+    const data = await Todo.setTags(id, tagIds);
 
     if (!data) {
       res.status(400).json({ message: "Bad request into your database" });

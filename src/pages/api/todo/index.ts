@@ -1,6 +1,6 @@
 import { methodSwitcher } from "../../../app/backend/utils";
 
-import { TaskTodo } from "../../../app/backend/todo";
+import { Todo } from "../../../app/backend/todo";
 
 import GenerateJWT from "../../../app/backend/auth/jwt";
 
@@ -32,7 +32,7 @@ export default methodSwitcher({
       completed: boolean;
     } = req.body;
 
-    const task = await TaskTodo.createTodo({
+    const task = await Todo.createTodo({
       title,
       description,
       completed,
@@ -61,7 +61,7 @@ export default methodSwitcher({
 
     const decoded = await GenerateJWT.decoded(token);
 
-    const todos = await TaskTodo.getTodo(decoded);
+    const todos = await Todo.getTodo(decoded);
 
     if (!todos) {
       res.statusCode = 404;

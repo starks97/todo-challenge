@@ -1,6 +1,6 @@
 import { methodSwitcher } from "../../../../app/backend/utils";
 
-import { TaskTodo } from "../../../../app/backend/todo";
+import { Todo } from "../../../../app/backend/todo";
 
 export default methodSwitcher({
   PUT: async (req, res) => {
@@ -24,7 +24,7 @@ export default methodSwitcher({
       completed: boolean;
     } = req.body;
 
-    const updateTodo = await TaskTodo.updateTodo(id, {
+    const updateTodo = await Todo.updateTodo(id, {
       title,
       description,
       color,
@@ -42,7 +42,7 @@ export default methodSwitcher({
 
   DELETE: (req, res) => {
     const { id = "" } = req.query as { id: string };
-    const todo = TaskTodo.deleteTodo(`${id}`);
+    const todo = Todo.deleteTodo(`${id}`);
     if (!todo) {
       res.statusCode = 404;
       res.send({ message: "there are not any todos to process" });

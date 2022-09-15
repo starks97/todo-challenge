@@ -1,7 +1,7 @@
 import { Prisma, ToDo, Tag } from "@prisma/client";
 import PrismaDB from "../../db/conectPrisma";
 
-export default class TaskTodo {
+export default class Todos {
   static async createTodo({
     userId,
     ...task
@@ -59,28 +59,6 @@ export default class TaskTodo {
         return data;
       }
       return null;
-    } catch (e) {
-      return null;
-    } finally {
-      await PrismaDB.disconnect();
-    }
-    return null;
-  }
-
-  static async getTodos() {
-    const prisma = await PrismaDB.getInstance();
-    try {
-      const data = await prisma.toDo.findMany({
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          color: true,
-          userId: true,
-        },
-      });
-
-      return data;
     } catch (e) {
       return null;
     } finally {
