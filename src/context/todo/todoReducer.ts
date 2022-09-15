@@ -4,7 +4,8 @@ export type TodoActionType =
   | { type: "[Todo] -  Create a todo"; payload: TodoProps[] }
   | { type: "[Todo] - LoadTodo from DB | storage"; payload: TodoProps[] }
   | { type: "[Todo] - Delete Todo"; payload: TodoProps }
-  | { type: "[Todo] - Update Todo"; payload: TodoProps[] };
+  | { type: "[Todo] - Update Todo"; payload: TodoProps[] }
+  | { type: "[Todo] - Set Tag to Todo"; payload: TodoProps };
 
 export const TodoReducer = (
   state: TodoState,
@@ -32,6 +33,20 @@ export const TodoReducer = (
       return {
         ...state,
         todos: [...action.payload],
+      };
+
+    case "[Todo] - Set Tag to Todo":
+      return {
+        ...state,
+        todos: state.todos.map((item) => {
+          if (item.id === action.payload.id) {
+            return {
+              ...item,
+              tagIds: action.payload.tagIds,
+            };
+          }
+          return item;
+        }),
       };
     default:
       return state;

@@ -23,7 +23,7 @@ export const TagProvider: FC<{ children: React.ReactNode }> = ({
       return;
     }
     const getTag = async () => {
-      const response = await fetch("/api/tag/get_tag", {
+      const response = await fetch("/api/tag", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -43,7 +43,7 @@ export const TagProvider: FC<{ children: React.ReactNode }> = ({
     color: string
   ): Promise<boolean | null> => {
     try {
-      const response = await fetch("/api/tag/createTag", {
+      const response = await fetch("/api/tag", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,7 +74,7 @@ export const TagProvider: FC<{ children: React.ReactNode }> = ({
 
   const deleteTag = async (tag: TagProps): Promise<boolean | null> => {
     try {
-      const response = await fetch(`/api/tag/delete_tag/?id=${tag.id}`, {
+      const response = await fetch(`/api/tag/${tag.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
@@ -93,7 +93,7 @@ export const TagProvider: FC<{ children: React.ReactNode }> = ({
 
   const updateTag = async (tag: TagProps): Promise<boolean | null> => {
     try {
-      const response = await fetch(`/api/tag/update_tag/?id=${tag.id}`, {
+      const response = await fetch(`/api/tag/${tag.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tag),

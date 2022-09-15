@@ -27,10 +27,17 @@ import CounterTask from "../../assets/counterTask.svg";
 
 import Image from "next/image";
 import { TodoProps, TodoContext } from "../../context/todo";
+import { TagProps, TagContext } from "../../context/tag";
 import { EditIcon } from "@chakra-ui/icons";
+import SelectTags from "./SelectTags";
 
-export default function TaskCard({ todo }: { todo: TodoProps }) {
-  const { deleteTodo, updateTodo, todos } = useContext(TodoContext);
+interface IProps {
+  todo: TodoProps;
+  tag: TagProps;
+}
+
+export default function TaskCard({ todo, tag }: IProps) {
+  const { deleteTodo, updateTodo } = useContext(TodoContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -42,8 +49,17 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
     color: todo.color,
   });
 
+  const [tagsIds, setTagsIds] = useState<TodoProps["tagIds"]>(
+    todo.tagIds ? todo.tagIds : []
+  );
+
   const handleEdit = () => {
-    const newValues = { ...data, id: todo.id, completed: todo.completed };
+    const newValues = {
+      ...data,
+      id: todo.id,
+      completed: todo.completed,
+      tagIds: todo.tagIds,
+    };
 
     if (todo.title !== data.title || todo.description !== data.description) {
       updateTodo(newValues);
@@ -68,6 +84,7 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
             borderBottomEndRadius={0}
             borderBottomStartRadius={0}
           />
+
           <Stack
             p={6}
             color={useColorModeValue("gray.800", "white")}
@@ -83,7 +100,7 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
               {todo.title}
             </Text>
             <Flex alignItems="center" p={2} px={3} gap={2}>
-              <Image src={CounterTask} width={30} height={30} />
+              <Image src={CounterTask} width={30} height={30} alt="Counter" />
               <Text>0/3</Text>
             </Flex>
           </Stack>
@@ -118,7 +135,9 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
                   border="none"
                   onKeyPress={(e) => (e.key === "Enter" ? handleEdit() : null)}
                 />
-                <InputLeftElement children={<EditIcon />} />
+                <InputLeftElement>
+                  <EditIcon />
+                </InputLeftElement>
               </InputGroup>
             </FormControl>
 
@@ -140,9 +159,13 @@ export default function TaskCard({ todo }: { todo: TodoProps }) {
                   }
                   onKeyPress={(e) => (e.key === "Enter" ? handleEdit() : null)}
                 />
-                <InputLeftElement children={<EditIcon />} />
+                <InputLeftElement>
+                  <EditIcon />
+                </InputLeftElement>
               </InputGroup>
             </FormControl>
+
+            <SelectTags tagsIds={tagsIds} setTagsIds={setTagsIds} todo={todo} />
           </ModalBody>
           <ModalFooter>
             <Button

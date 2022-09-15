@@ -28,7 +28,7 @@ export const handleCreateTodo_from_DB = async ({
   todoState,
 }: Props): Promise<boolean | null> => {
   try {
-    const response = await fetch("/api/todo/create", {
+    const response = await fetch("/api/todo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, description, color }),
@@ -59,7 +59,7 @@ export const handleDeleteTodo_from_DB = async ({
   ...todo
 }: TodoWithActionOptions) => {
   try {
-    const response = await fetch(`/api/todo/deleteTodo/?id=${todo.id}`, {
+    const response = await fetch(`/api/todo/${todo.id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
@@ -84,7 +84,7 @@ export const handleUpdateTodo_from_DB = async ({
   ...todo
 }: TodoActionState) => {
   try {
-    const response = await fetch(`/api/todo/update_todo/?id=${todo.id}`, {
+    const response = await fetch(`/api/todo/${todo.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(todo),

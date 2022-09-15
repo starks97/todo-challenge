@@ -58,7 +58,7 @@ export default function SimpleCard() {
 
   useEffect(() => {
     router.prefetch("/");
-  }, []);
+  });
   return (
     <Flex
       minH={"100vh"}
@@ -129,11 +129,10 @@ export default function SimpleCard() {
             </form>
           </Stack>
           {errorMessage && (
-            <ErrorMessages
-              children={
-                "There was a problem with your password or username. Please try again"
-              }
-            />
+            <ErrorMessages>
+              There was a problem with your password or username. Please try
+              again
+            </ErrorMessages>
           )}
         </Box>
       </Stack>

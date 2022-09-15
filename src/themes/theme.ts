@@ -14,6 +14,7 @@ const config: ThemeConfig = {
 
 export const theme = extendTheme({
   config,
+
   styles: {
     global: (theme: StyleFunctionProps) => ({
       "*": {

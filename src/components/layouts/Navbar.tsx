@@ -81,12 +81,12 @@ export default function Navbar() {
                   <MenuDivider />
                   {isLoggedIn ? (
                     <>
-                      <NavLinks children={"Profile"} url={"/cpanel"} />
-                      <NavLinks children={"Log Out"} url={"#"} />
+                      <NavLinks url={"/cpanel"}>Profile</NavLinks>
+                      <NavLinks url={"#"}>Logout </NavLinks>
                     </>
                   ) : (
                     <>
-                      <NavLinks children={"Login"} url={"/auth/login"} />
+                      <NavLinks url={"/auth/login"}>Login</NavLinks>
                     </>
                   )}
                 </MenuList>

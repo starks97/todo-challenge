@@ -143,11 +143,10 @@ export default function SignUp() {
             </form>
           </Stack>
           {errorMessage && (
-            <ErrorMessages
-              children={
-                "The username that you entered, its already in use. Please try again with a different username"
-              }
-            />
+            <ErrorMessages>
+              The username that you entered, its already in use. Please try
+              again with a different username
+            </ErrorMessages>
           )}
         </Box>
       </Stack>

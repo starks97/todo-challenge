@@ -40,7 +40,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     }
 
     const getTodos = async () => {
-      const response = await fetch("/api/todo/getTodos", {
+      const response = await fetch("/api/todo", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -100,9 +100,30 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     return response;
   };
 
+  const setTag = async ({ tagIds, ...todo }: TodoProps) => {
+    try {
+      const response = await fetch(`/api/todo/${todo.id}/tags`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tagIds }),
+      });
+
+      if (!response) return null;
+
+      const { data } = await response.json();
+
+      dispatch({ type: "[Todo] - Set Tag to Todo", payload: data });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
   return (
     <TodoContext.Provider
-      value={{ ...todoState, createTodo, deleteTodo, updateTodo }}
+      value={{ ...todoState, createTodo, deleteTodo, updateTodo, setTag }}
     >
       {children}
     </TodoContext.Provider>

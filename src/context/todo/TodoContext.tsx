@@ -6,6 +6,7 @@ export interface TodoProps {
   completed: boolean;
   color: string;
   id: string;
+  tagIds: string[];
 }
 
 interface ContextProps {
@@ -17,6 +18,7 @@ interface ContextProps {
   ) => Promise<boolean | null>;
   deleteTodo: (task: TodoProps) => void;
   updateTodo: (todo: TodoProps) => Promise<true | null>;
+  setTag: ({ tagIds }: TodoProps) => Promise<true | null>;
 }
 
 export const TodoContext = createContext({} as ContextProps);

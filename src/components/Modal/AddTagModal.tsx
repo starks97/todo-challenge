@@ -41,7 +41,6 @@ export default function AddTagModal({ isOpen, onOpen, onClose }: Props) {
 
   const [data, setData] = useState({
     title: "",
-    toDoId: "",
   });
 
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -49,10 +48,10 @@ export default function AddTagModal({ isOpen, onOpen, onClose }: Props) {
     try {
       setIsCreatedTag(true);
 
-      const response = await createTag(data.title, color, data.toDoId);
+      const response = await createTag(data.title, color);
 
       setIsCreatedTag(false);
-      setData({ title: "", toDoId: "" });
+      setData({ title: "" });
 
       if (!response) {
         throw new Error("Something went wrong");

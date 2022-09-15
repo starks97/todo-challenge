@@ -1,4 +1,4 @@
-import { Prisma, ToDo } from "@prisma/client";
+import { Prisma, ToDo, Tag } from "@prisma/client";
 import PrismaDB from "../../db/conectPrisma";
 
 export default class TaskTodo {
@@ -111,7 +111,7 @@ export default class TaskTodo {
 
   static async updateTodo(
     id: string,
-    data: Omit<ToDo, "createdAt" | "updatedAt" | "id" | "userId"| "tagIds">
+    data: Omit<ToDo, "createdAt" | "updatedAt" | "id" | "userId" | "tagIds">
   ) {
     const prisma = await PrismaDB.getInstance();
     try {
@@ -135,7 +135,30 @@ export default class TaskTodo {
       return newTodoData;
     } catch (e) {
       console.log(e);
-      return null
+      return null;
+    } finally {
+      await PrismaDB.disconnect();
+    }
+  }
+
+  static async setTags(id: string, tagIds: string[]) {
+    const prisma = await PrismaDB.getInstance();
+
+    try {
+      const newTodoData = await prisma.toDo.update({
+        where: { id },
+        data: {
+          tagIds: {
+            set: [...tagIds],
+          },
+        },
+      });
+
+      if (!newTodoData) return null;
+
+      return newTodoData;
+    } catch (e) {
+      return null;
     } finally {
       await PrismaDB.disconnect();
     }

@@ -1,3 +1,5 @@
+import React, { useContext, useState } from "react";
+
 import { EditIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -18,7 +20,7 @@ import {
   ModalCloseButton,
   ModalOverlay,
 } from "@chakra-ui/react";
-import React, { useContext, useState } from "react";
+
 import { TagContext, TagProps } from "../../context/tag";
 import { ColorPicker } from "../Modal";
 
@@ -39,8 +41,6 @@ export default function TagCard({ tag }: { tag: TagProps }) {
     }
 
     onClose();
-
-    return;
   };
 
   return (
@@ -79,7 +79,9 @@ export default function TagCard({ tag }: { tag: TagProps }) {
                   onChange={(e) => setTitle(e.target.value)}
                   border="none"
                 />
-                <InputLeftElement children={<EditIcon />} />
+                <InputLeftElement>
+                  <EditIcon />
+                </InputLeftElement>
               </InputGroup>
             </FormControl>
 

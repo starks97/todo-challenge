@@ -29,4 +29,18 @@ export default methodSwitcher({
 
     res.status(200).json({ updateTag });
   },
+
+  DELETE: (req, res) => {
+    const { id = "" } = req.query;
+    const tag = Tags.deleteTag(`${id}`);
+    if (!tag) {
+      res.statusCode = 404;
+      res.send({ message: "there are not any tags to process" });
+      return;
+    }
+
+    return res.status(200).json({
+      message: "the tag was successfully deleted",
+    });
+  },
 });
