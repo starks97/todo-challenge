@@ -44,12 +44,6 @@ export default function AddTaskModal({ isOpen, onOpen, onClose }: Props) {
     completed: false,
   });
 
-  const dic = {
-    title: "title",
-    description: "description",
-    
-  }
-
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {

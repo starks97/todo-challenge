@@ -2,6 +2,7 @@ import { FC, useReducer, useEffect, useContext } from "react";
 import { TodoProps, TodoContext, TodoReducer } from ".";
 
 import { AuthContext } from "../auth";
+
 import {
   handleCreateTodo_from_DB,
   handleCreateTodo_from_LS,
@@ -23,6 +24,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [todoState, dispatch] = useReducer(TodoReducer, TODO_INITIAL_STATE);
+
   const { auth, isLoading } = useContext(AuthContext);
 
   useEffect(() => {

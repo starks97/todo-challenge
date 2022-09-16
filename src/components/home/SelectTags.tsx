@@ -4,8 +4,9 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  IconButton,
   MenuOptionGroup,
+  Button,
+  Container,
 } from "@chakra-ui/react";
 
 import { TagContext } from "../../context/tag";
@@ -22,30 +23,33 @@ interface Props {
 export default function SelectTags({ tagsIds, setTagsIds, todo }: Props) {
   const { tag } = useContext(TagContext);
   return (
-    <Menu>
-      <MenuButton
-        as={IconButton}
-        aria-label="Options"
-        icon={<AddIcon />}
-        variant="outline"
-        size="lg"
-        width="10%"
-      >
-        Tag
-      </MenuButton>
-      <MenuList>
-        <MenuOptionGroup title="Tags">
-          {tag.map((tag) => (
-            <TagSelected
-              tag={tag}
-              key={tag.id}
-              setTagsIds={setTagsIds}
-              tagsIds={tagsIds}
-              todo={todo}
-            />
-          ))}
-        </MenuOptionGroup>
-      </MenuList>
-    </Menu>
+    <Container marginTop="1rem" justifyContent="flex-end">
+      <Menu>
+        <MenuButton
+          as={Button}
+          aria-label="Options"
+          leftIcon={<AddIcon />}
+          variant="none"
+          size="lg"
+          width="10%"
+          justifyContent="flex-end"
+        >
+          Select Tags
+        </MenuButton>
+        <MenuList>
+          <MenuOptionGroup title="Tags" type={"checkbox"}>
+            {tag.map((tag) => (
+              <TagSelected
+                tag={tag}
+                key={tag.id}
+                setTagsIds={setTagsIds}
+                tagsIds={tagsIds}
+                todo={todo}
+              />
+            ))}
+          </MenuOptionGroup>
+        </MenuList>
+      </Menu>
+    </Container>
   );
 }

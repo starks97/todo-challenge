@@ -30,13 +30,13 @@ import { TodoProps, TodoContext } from "../../context/todo";
 import { TagProps, TagContext } from "../../context/tag";
 import { EditIcon } from "@chakra-ui/icons";
 import SelectTags from "./SelectTags";
+import TagList from "./TagList";
 
 interface IProps {
   todo: TodoProps;
-  tag: TagProps;
 }
 
-export default function TaskCard({ todo, tag }: IProps) {
+export default function TodoCard({ todo }: IProps) {
   const { deleteTodo, updateTodo } = useContext(TodoContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -85,6 +85,8 @@ export default function TaskCard({ todo, tag }: IProps) {
             borderBottomStartRadius={0}
           />
 
+          <TagList tagsIds={tagsIds} />
+
           <Stack
             p={6}
             color={useColorModeValue("gray.800", "white")}
@@ -123,6 +125,7 @@ export default function TaskCard({ todo, tag }: IProps) {
               <FormLabel
                 color={useColorModeValue("gray.800", "black")}
                 fontSize="lg"
+                fontWeight="bold"
               >
                 Title
               </FormLabel>
@@ -145,6 +148,7 @@ export default function TaskCard({ todo, tag }: IProps) {
               <FormLabel
                 color={useColorModeValue("gray.800", "black")}
                 fontSize="lg"
+                fontWeight="bold"
               >
                 Description
               </FormLabel>

@@ -7,6 +7,11 @@ export type TodoActionType =
   | { type: "[Todo] - Update Todo"; payload: TodoProps[] }
   | { type: "[Todo] - Set Tag to Todo"; payload: TodoProps };
 
+/*export enum TodoActionEnum {
+  TODO_CREATE = "[Todo] -  Create a todo" //todo.create
+  
+}*/
+
 export const TodoReducer = (
   state: TodoState,
   action: TodoActionType
