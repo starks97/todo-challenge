@@ -8,8 +8,6 @@ import {
   Box,
   Text,
   FormControl,
-  FormLabel,
-  InputGroup,
   useColorModeValue,
   ListItem,
   Checkbox,

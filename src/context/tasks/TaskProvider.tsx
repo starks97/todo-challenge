@@ -17,18 +17,16 @@ export const TaskProvider: FC<{ children: React.ReactNode }> = ({
 }) => {
   const [taskState, dispatch] = useReducer(TaskReducer, TASK_INITIAL_STATE);
 
-  const { todos } = useContext(TodoContext);
+  const { todoSelected } = useContext(TodoContext);
 
-  const todoId = "";
 
-  const id = todos.filter((todo) => todo.id);
 
   const createTask = async (
     title: string,
     completed: boolean
   ): Promise<boolean | null> => {
     try {
-      const response = await fetch(`api/tasks/${id.map((id) => id.id)}`, {
+      const response = await fetch(`api/tasks/${todoSelected.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, completed }),

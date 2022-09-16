@@ -1,4 +1,4 @@
-import { FC, useReducer, useEffect, useContext } from "react";
+import { FC, useReducer, useEffect, useContext, useState } from "react";
 import { TodoProps, TodoContext, TodoReducer } from ".";
 
 import { AuthContext } from "../auth";
@@ -24,6 +24,15 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [todoState, dispatch] = useReducer(TodoReducer, TODO_INITIAL_STATE);
+
+  const [todoSelected, setTodoSelected] = useState<TodoProps>({
+    title: "",
+    description: "",
+    color: "",
+    tagIds: [],
+    id: "",
+    completed: false,
+  });
 
   const { auth, isLoading } = useContext(AuthContext);
 
@@ -60,7 +69,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   const createTodo = async (
     title: string,
     description: string,
-    color: string,
+    color: string
   ) => {
     const args = {
       title,
@@ -125,7 +134,15 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
 
   return (
     <TodoContext.Provider
-      value={{ ...todoState, createTodo, deleteTodo, updateTodo, setTag }}
+      value={{
+        ...todoState,
+        createTodo,
+        deleteTodo,
+        updateTodo,
+        setTag,
+        todoSelected,
+        setTodoSelected,
+      }}
     >
       {children}
     </TodoContext.Provider>
