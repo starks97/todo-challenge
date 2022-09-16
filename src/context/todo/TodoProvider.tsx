@@ -60,7 +60,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   const createTodo = async (
     title: string,
     description: string,
-    color: string
+    color: string,
   ) => {
     const args = {
       title,

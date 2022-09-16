@@ -22,15 +22,17 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 
 import CounterTask from "../../assets/counterTask.svg";
 
 import Image from "next/image";
 import { TodoProps, TodoContext } from "../../context/todo";
-import { TagProps, TagContext } from "../../context/tag";
-import { EditIcon } from "@chakra-ui/icons";
-import SelectTags from "./SelectTags";
-import TagList from "./TagList";
+
+import { SelectTags, TagList } from "./tags";
+
+import { AuthContext } from "../../context/auth";
+import { TaskList } from "./tasks";
 
 interface IProps {
   todo: TodoProps;
@@ -38,6 +40,8 @@ interface IProps {
 
 export default function TodoCard({ todo }: IProps) {
   const { deleteTodo, updateTodo } = useContext(TodoContext);
+
+  const { isLoggedIn } = useContext(AuthContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -133,7 +137,7 @@ export default function TodoCard({ todo }: IProps) {
                 <Input
                   type="text"
                   value={data.title}
-                  fontSize="2xl"
+                  fontSize="lg"
                   onChange={(e) => setData({ ...data, title: e.target.value })}
                   border="none"
                   onKeyPress={(e) => (e.key === "Enter" ? handleEdit() : null)}
@@ -156,7 +160,7 @@ export default function TodoCard({ todo }: IProps) {
                 <Input
                   type="text"
                   value={data.description}
-                  fontSize="xl"
+                  fontSize="lg"
                   border="none"
                   onChange={(e) =>
                     setData({ ...data, description: e.target.value })
@@ -169,7 +173,17 @@ export default function TodoCard({ todo }: IProps) {
               </InputGroup>
             </FormControl>
 
-            <SelectTags tagsIds={tagsIds} setTagsIds={setTagsIds} todo={todo} />
+            <TaskList />
+
+            {isLoggedIn === true ? (
+              <SelectTags
+                tagsIds={tagsIds}
+                setTagsIds={setTagsIds}
+                todo={todo}
+              />
+            ) : (
+              ""
+            )}
           </ModalBody>
           <ModalFooter>
             <Button

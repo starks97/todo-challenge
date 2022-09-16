@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 
 import { MenuItem } from "@chakra-ui/react";
 
-import { TagProps } from "../../context/tag";
-import { TodoContext, TodoProps } from "../../context/todo";
+import { TagProps } from "../../../context/tag";
+import { TodoContext, TodoProps } from "../../../context/todo";
 
 interface Props {
   setTagsIds: React.Dispatch<React.SetStateAction<string[]>>;

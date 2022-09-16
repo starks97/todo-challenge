@@ -8,7 +8,7 @@ import TodoCard from "./TodoCard";
 
 import { TodoContext } from "../../context/todo";
 
-export default function TaskList() {
+export default function TodoList() {
   const { todos } = useContext(TodoContext);
 
   return (

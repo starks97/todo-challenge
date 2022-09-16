@@ -110,7 +110,7 @@ export default function AddTagModal({ isOpen, onOpen, onClose }: Props) {
                   colorScheme="blue"
                   mr={3}
                   isLoading={isCreatedTag}
-                  loadingText="Creating task..."
+                  loadingText="Creating tag..."
                   onClick={onClose}
                 >
                   Create

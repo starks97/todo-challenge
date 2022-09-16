@@ -1,4 +1,4 @@
-import { TaskList } from "../components/home";
+import { TodoList } from "../components/home";
 import { Navbar } from "../components/layouts";
 
 import { useState, useEffect } from "react";
@@ -17,7 +17,7 @@ export default function Home({}: Props) {
       {domLoaded && (
         <>
           <Navbar />
-          <TaskList />
+          <TodoList />
         </>
       )}
     </>

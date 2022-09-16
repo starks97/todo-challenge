@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
-import { Grid, GridItem, Flex, Tag, Box, Container } from "@chakra-ui/react";
-import { TagContext, TagProps } from "../../context/tag";
+import { Grid, GridItem, Tag, Container } from "@chakra-ui/react";
+import { TagContext, TagProps } from "../../../context/tag";
 
 interface Props {
   tagsIds: string[];
@@ -22,7 +22,7 @@ export default function TagList({ tagsIds }: Props) {
       >
         <GridItem>
           {tags.map((item) => (
-            <Tag key={item!.id} bg={item!.color} w="4rem" m="0.3rem"/>
+            <Tag key={item.id} bg={item.color} w="4rem" m="0.3rem" />
           ))}
         </GridItem>
       </Grid>

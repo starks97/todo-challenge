@@ -9,10 +9,10 @@ import {
   Container,
 } from "@chakra-ui/react";
 
-import { TagContext } from "../../context/tag";
+import { TagContext } from "../../../context/tag";
 import { AddIcon } from "@chakra-ui/icons";
 import TagSelected from "./TagSelected";
-import { TodoProps } from "../../context/todo";
+import { TodoProps } from "../../../context/todo";
 
 interface Props {
   setTagsIds: React.Dispatch<React.SetStateAction<string[]>>;
@@ -33,6 +33,7 @@ export default function SelectTags({ tagsIds, setTagsIds, todo }: Props) {
           size="lg"
           width="10%"
           justifyContent="flex-end"
+          color="black"
         >
           Select Tags
         </MenuButton>

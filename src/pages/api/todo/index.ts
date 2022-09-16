@@ -32,7 +32,7 @@ export default methodSwitcher({
       completed: boolean;
     } = req.body;
 
-    const task = await Todo.createTodo({
+    const todo = await Todo.createTodo({
       title,
       description,
       completed,
@@ -41,14 +41,14 @@ export default methodSwitcher({
       tagIds: [],
     });
 
-    if (!task) {
+    if (!todo) {
       res.statusCode = 404;
       res.send({ message: "invalid credentials" });
       return;
     }
 
     return res.status(200).json({
-      task,
+      todo,
     });
   },
 
