@@ -1,5 +1,5 @@
 import { FC, useReducer, useEffect, useContext, useState } from "react";
-import { TodoProps, TodoContext, TodoReducer } from ".";
+import { TodoProps, TodoContext, TodoReducer, TaskProps } from ".";
 
 import { AuthContext } from "../auth";
 
@@ -32,7 +32,10 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     tagIds: [],
     id: "",
     completed: false,
+    tasks: [],
   });
+
+  const [todoLoaded, setTodoLoaded] = useState<boolean>(false);
 
   const { auth, isLoading } = useContext(AuthContext);
 
@@ -61,6 +64,8 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
       const { todos } = await response.json();
 
       dispatch({ type: "[Todo] - LoadTodo from DB | storage", payload: todos });
+
+      setTodoLoaded(true);
     };
 
     getTodos();
@@ -132,6 +137,33 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const createTask = async ({
+    title,
+    completed,
+  }: TaskProps): Promise<boolean | null> => {
+    try {
+      const response = await fetch(`api/tasks/${todoSelected.id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, completed }),
+      });
+
+      if (!response) return null;
+
+      const { createTasks } = await response.json();
+
+      dispatch({
+        type: "[Todo] - Create task",
+        payload: createTasks,
+      });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
   return (
     <TodoContext.Provider
       value={{
@@ -142,6 +174,8 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
         setTag,
         todoSelected,
         setTodoSelected,
+        todoLoaded,
+        createTask,
       }}
     >
       {children}

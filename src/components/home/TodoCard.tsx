@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import {
   Box,
@@ -8,17 +8,15 @@ import {
   useColorModeValue,
   Stack,
   Flex,
-  useDisclosure,
 } from "@chakra-ui/react";
 
 import CounterTask from "../../assets/counterTask.svg";
 
 import Image from "next/image";
-import { TodoProps, TodoContext } from "../../context/todo";
+import { TodoProps } from "../../context/todo";
 
-import { SelectTags, TagList } from "./tags";
-
-import { AuthContext } from "../../context/auth";
+import { TagList } from "./tags";
+import { Task } from "@prisma/client";
 
 interface IProps {
   todo: TodoProps;
@@ -63,13 +61,39 @@ export default function TodoCard({ todo, onOpen }: IProps) {
             >
               {todo.title}
             </Text>
-            <Flex alignItems="center" p={2} px={3} gap={2}>
-              <Image src={CounterTask} width={30} height={30} alt="Counter" />
-              <Text>0/3</Text>
-            </Flex>
+
+            <CompletedTasks tasks={todo.tasks} />
           </Stack>
         </Box>
       </GridItem>
     </>
+  );
+}
+
+interface ICompletedTasks {
+  tasks: Task[];
+}
+
+function CompletedTasks({ tasks }: ICompletedTasks) {
+  if (tasks.length === 0) {
+    return (
+      <Flex alignItems="center" justifyContent="center">
+        <Image src={CounterTask} width="25px" height="25px" />
+        <Text color="whiteAlpha.700" fontSize="lg" marginLeft="0.3rem">
+          No tasks
+        </Text>
+      </Flex>
+    );
+  }
+  const completedTasks = useMemo(() => {
+    return tasks.filter((task) => task.completed === true).length;
+  }, [tasks]);
+  return (
+    <Flex alignItems="center" p={2} px={3} gap={2}>
+      <Image src={CounterTask} width={30} height={30} alt="Counter" />
+      <Text>
+        {completedTasks}/{tasks.length}
+      </Text>
+    </Flex>
   );
 }

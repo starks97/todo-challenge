@@ -1,3 +1,4 @@
+import { Task } from "@prisma/client";
 import { createContext, Dispatch, SetStateAction } from "react";
 
 export interface TodoProps {
@@ -7,6 +8,12 @@ export interface TodoProps {
   color: string;
   id: string;
   tagIds: string[];
+  tasks: Task[];
+}
+
+export interface TaskProps {
+  title: string;
+  completed: boolean;
 }
 
 interface ContextProps {
@@ -21,6 +28,8 @@ interface ContextProps {
   setTag: ({ tagIds }: TodoProps) => Promise<true | null>;
   todoSelected: TodoProps;
   setTodoSelected: Dispatch<SetStateAction<TodoProps>>;
+  todoLoaded: boolean;
+  createTask: ({ title, completed }: TaskProps) => Promise<boolean | null>;
 }
 
 export const TodoContext = createContext({} as ContextProps);

@@ -3,9 +3,9 @@ import { methodSwitcher } from "../../../../app/backend/utils";
 import GenerateJWT from "../../../../app/backend/auth/jwt";
 
 import { Tasks } from "../../../../app/backend/tasks";
-import { Check, ToDo } from "@prisma/client";
+import { Task, ToDo } from "@prisma/client";
 
-type CreateTaskRequest = (Check & {}) | null;
+type CreateTaskRequest = (Task & {}) | null;
 
 type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
@@ -45,7 +45,7 @@ export default methodSwitcher({
       completed: boolean;
     } = req.body;
 
-    const createTasks: WithOutUndefined = await Tasks.createTasks({
+    const createTasks = await Tasks.createTasks({
       todoId: id,
       userId: decoded,
       title,

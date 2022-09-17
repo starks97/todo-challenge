@@ -21,12 +21,10 @@ import {
 
 import { TaskList } from "./tasks";
 
-import { SelectTags, TagList } from "./tags";
+import { SelectTags } from "./tags";
 
-import { TodoProps, TodoContext } from "../../context/todo";
+import { TodoContext } from "../../context/todo";
 import { AuthContext } from "../../context/auth";
-import todo from "../../pages/api/todo";
-import Todos from "../../app/backend/todo/todos";
 
 interface IProps {
   isOpen: boolean;
@@ -37,13 +35,22 @@ export default function TodoModal({ isOpen, onClose }: IProps) {
   const { deleteTodo, updateTodo, todoSelected, setTodoSelected, todos } =
     useContext(TodoContext);
 
+  console.log(todos);
+
   const [initialTodoState, setInitialTodoState] = useState(todoSelected);
 
   const [tagsIds, setTagsIds] = useState(todoSelected.tagIds);
 
+  //tasks
+
+  const [taskCreated, setTaskCreated] = useState({
+    title: "",
+    completed: false,
+  });
+
   useEffect(() => {
-    if (initialTodoState.id === todoSelected.id) {
-      setInitialTodoState({...todoSelected});
+    if (initialTodoState.id !== todoSelected.id) {
+      setInitialTodoState({ ...todoSelected });
     }
   }, [initialTodoState]);
 
@@ -67,6 +74,7 @@ export default function TodoModal({ isOpen, onClose }: IProps) {
       id: todoSelected.id,
       completed: todoSelected.completed,
       tagIds: tagsIds,
+      tasks: todos.find((todo) => todo.id === todoSelected.id)!.tasks,
     };
 
     if (!todos.find((todo) => todo.id === todoSelected.id)) {
@@ -148,7 +156,7 @@ export default function TodoModal({ isOpen, onClose }: IProps) {
             </InputGroup>
           </FormControl>
 
-          <TaskList />
+          <TaskList taskCreated={taskCreated} setTaskCreated={setTaskCreated} />
 
           {isLoggedIn === true ? (
             <SelectTags

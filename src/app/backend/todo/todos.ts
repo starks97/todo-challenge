@@ -52,6 +52,7 @@ export default class Todos {
             color: true,
             userId: true,
             tagIds: true,
+            tasks: true,
           },
         });
 

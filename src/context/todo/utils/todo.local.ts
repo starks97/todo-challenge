@@ -18,6 +18,8 @@ export const handleCreateTodo_from_LS = ({
       color,
       completed: false,
       id: generateId(),
+      tagIds: [],
+      tasks: [],
     };
 
     localStorage.setItem(
