@@ -35,8 +35,6 @@ export default function TodoModal({ isOpen, onClose }: IProps) {
   const { deleteTodo, updateTodo, todoSelected, setTodoSelected, todos } =
     useContext(TodoContext);
 
-  console.log(todos);
-
   const [initialTodoState, setInitialTodoState] = useState(todoSelected);
 
   const [tagsIds, setTagsIds] = useState(todoSelected.tagIds);

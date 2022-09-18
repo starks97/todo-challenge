@@ -13,9 +13,9 @@ import Image from "next/image";
 
 import AddTask from "../../../assets/AddTask.svg";
 
-
 import TaskCard from "./TaskCard";
 import { TodoContext } from "../../../context/todo";
+import { Task } from "@prisma/client";
 
 interface Props {
   taskCreated: { title: string; completed: boolean };
@@ -29,10 +29,10 @@ export default function TaskList({ taskCreated, setTaskCreated }: Props) {
 
   const handleForm = async () => {
     try {
-      const response = await createTask({
-        title: taskCreated.title,
-        completed: taskCreated.completed,
-      });
+      const response = await createTask(
+        taskCreated.title,
+        taskCreated.completed
+      );
 
       setTaskCreated({ title: "", completed: false });
 
@@ -73,13 +73,11 @@ export default function TaskList({ taskCreated, setTaskCreated }: Props) {
         </FormControl>
       </Flex>
 
-      <Flex marginTop="0.6rem">
-        <List>
-          {taskState.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
-        </List>
-      </Flex>
+      <List>
+        {taskState.map((task) => (
+          <TaskCard key={task.id} task={task} />
+        ))}
+      </List>
     </Flex>
   );
 }

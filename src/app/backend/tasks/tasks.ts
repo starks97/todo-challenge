@@ -60,7 +60,7 @@ export default class Tasks {
 
   static async updateTasks(
     id: string,
-    data: Omit<Task, "id" | "userId" | "todoId">
+    data: Omit<Task, "id" | "userId" | "todoId" | "title">
   ) {
     const prisma = await PrismaDB.getInstance();
 
@@ -74,7 +74,6 @@ export default class Tasks {
       const newCheck = await prisma.task.update({
         where: { id },
         data: {
-          title: data.title || oldCheck.title,
           completed: data.completed || oldCheck.completed,
         },
       });

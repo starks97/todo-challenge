@@ -53,6 +53,7 @@ export default class Todos {
             userId: true,
             tagIds: true,
             tasks: true,
+            completed: true,
           },
         });
 

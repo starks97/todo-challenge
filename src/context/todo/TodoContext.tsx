@@ -11,11 +11,6 @@ export interface TodoProps {
   tasks: Task[];
 }
 
-export interface TaskProps {
-  title: string;
-  completed: boolean;
-}
-
 interface ContextProps {
   todos: TodoProps[];
   createTodo: (
@@ -29,7 +24,9 @@ interface ContextProps {
   todoSelected: TodoProps;
   setTodoSelected: Dispatch<SetStateAction<TodoProps>>;
   todoLoaded: boolean;
-  createTask: ({ title, completed }: TaskProps) => Promise<boolean | null>;
+  createTask: (title: string, completed: boolean) => Promise<boolean | null>;
+  deleteTask: (task: Task) => Promise<boolean | null>;
+  updateTask: (task: Task) => Promise<boolean | null>;
 }
 
 export const TodoContext = createContext({} as ContextProps);

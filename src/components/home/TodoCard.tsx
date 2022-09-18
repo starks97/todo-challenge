@@ -75,6 +75,9 @@ interface ICompletedTasks {
 }
 
 function CompletedTasks({ tasks }: ICompletedTasks) {
+  const completedTasks = useMemo(() => {
+    return tasks.filter((task) => task.completed === true).length;
+  }, [tasks]);
   if (tasks.length === 0) {
     return (
       <Flex alignItems="center" justifyContent="center">
@@ -85,9 +88,18 @@ function CompletedTasks({ tasks }: ICompletedTasks) {
       </Flex>
     );
   }
-  const completedTasks = useMemo(() => {
-    return tasks.filter((task) => task.completed === true).length;
-  }, [tasks]);
+
+  if (completedTasks === tasks.length) {
+    return (
+      <Flex alignItems="center" justifyContent="center">
+        <Image src={CounterTask} width="25px" height="25px" />
+        <Text color="whiteAlpha.700" fontSize="lg" marginLeft="0.3rem">
+          All tasks completed
+        </Text>
+      </Flex>
+    );
+  }
+
   return (
     <Flex alignItems="center" p={2} px={3} gap={2}>
       <Image src={CounterTask} width={30} height={30} alt="Counter" />

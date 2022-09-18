@@ -1,5 +1,6 @@
+import { Task } from "@prisma/client";
 import { FC, useReducer, useEffect, useContext, useState } from "react";
-import { TodoProps, TodoContext, TodoReducer, TaskProps } from ".";
+import { TodoProps, TodoContext, TodoReducer } from ".";
 
 import { AuthContext } from "../auth";
 
@@ -137,10 +138,10 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const createTask = async ({
-    title,
-    completed,
-  }: TaskProps): Promise<boolean | null> => {
+  const createTask = async (
+    title: string,
+    completed: boolean
+  ): Promise<boolean | null> => {
     try {
       const response = await fetch(`api/tasks/${todoSelected.id}`, {
         method: "POST",
@@ -164,6 +165,46 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const deleteTask = async (task: Task): Promise<boolean | null> => {
+    try {
+      const response = await fetch(`/api/tasks/${task.id}/delete`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response) {
+        throw new Error("somenthing went wrong ");
+      }
+
+      dispatch({ type: "[Todo] - Delete task", payload: task });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
+  const updateTask = async (task: Task): Promise<boolean | null> => {
+    try {
+      const response = await fetch(`/api/tasks/${task.id}/update`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task),
+      });
+
+      if (!response) {
+        throw new Error("somenthing went wrong ");
+      }
+
+      dispatch({ type: "[Todo] - Update task", payload: task });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
   return (
     <TodoContext.Provider
       value={{
@@ -176,6 +217,8 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
         setTodoSelected,
         todoLoaded,
         createTask,
+        deleteTask,
+        updateTask,
       }}
     >
       {children}
