@@ -4,15 +4,18 @@ import { theme } from "../themes";
 import { AuthProvider } from "../context/auth";
 import { TodoProvider } from "../context/todo";
 import { TagProvider } from "../context/tag";
+import { TaskProvider } from "../context/tasks";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <TagProvider>
         <TodoProvider>
-          <ChakraProvider resetCSS theme={theme}>
-            <Component {...pageProps} />
-          </ChakraProvider>
+          <TaskProvider>
+            <ChakraProvider resetCSS theme={theme}>
+              <Component {...pageProps} />
+            </ChakraProvider>
+          </TaskProvider>
         </TodoProvider>
       </TagProvider>
     </AuthProvider>

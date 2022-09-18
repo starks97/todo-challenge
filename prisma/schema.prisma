@@ -21,7 +21,7 @@ model User {
   updatedAt DateTime @default(now())
   // -- Relations
   tags      Tag[]
-  tasks     Task[]
+  checks    Check[]
   todos     ToDo[]
 }
 
@@ -38,7 +38,7 @@ model Tag {
   toDoId String[] @db.ObjectId
 }
 
-model Task {
+model Check {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   //* ---
   title     String
@@ -63,9 +63,8 @@ model ToDo {
   // -- Relations
   tags        Tag[]    @relation(fields: [tagIds], references: [id])
   tagIds      String[] @db.ObjectId
-  tasks       Task[]
-
+  checks      Check[]
   // -- Relations
-  User   User   @relation(fields: [userId], references: [id])
-  userId String @db.ObjectId
+  User        User     @relation(fields: [userId], references: [id])
+  userId      String   @db.ObjectId
 }

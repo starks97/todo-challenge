@@ -18,9 +18,12 @@ export default methodSwitcher({
       return res.status(401).send({ code: 401, message: "Unauthorized" });
     }
 
-    const { completed = false }: { completed: boolean } = req.body;
+    const {
+      title = "",
+      completed = false,
+    }: { title: string; completed: boolean } = req.body;
 
-    const updateTask = await Tasks.updateTasks(id, { completed });
+    const updateTask = await Tasks.updateTasks(id, { title, completed });
 
     if (!updateTask) {
       return res

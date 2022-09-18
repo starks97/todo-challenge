@@ -1,4 +1,4 @@
-import { Prisma, ToDo } from "@prisma/client";
+import { Prisma, ToDo, Tag } from "@prisma/client";
 import PrismaDB from "../../db/conectPrisma";
 
 export default class Todos {
@@ -52,8 +52,6 @@ export default class Todos {
             color: true,
             userId: true,
             tagIds: true,
-            tasks: true,
-            completed: true,
           },
         });
 

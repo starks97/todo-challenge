@@ -40,11 +40,11 @@ export const handleCreateTodo_from_DB = async ({
 
     const todoCreated = await response.json();
 
-    const { todo } = todoCreated;
+    const { task } = todoCreated;
 
     dispatch({
       type: "[Todo] -  Create a todo",
-      payload: [...todoState.todos, todo],
+      payload: [...todoState.todos, task],
     });
 
     return true;

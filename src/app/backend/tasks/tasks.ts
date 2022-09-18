@@ -1,13 +1,13 @@
 import { PrismaDB } from "../../db";
-import { Task, Prisma } from "@prisma/client";
+import { Check, Prisma } from "@prisma/client";
 
 export default class Tasks {
-  static async createTasks({ todoId, userId, ...checks }: Omit<Task, "id">) {
+  static async createTasks({ todoId, userId, ...checks }: Omit<Check, "id">) {
     const prisma = await PrismaDB.getInstance();
 
     try {
       if (checks) {
-        const data = await prisma.task.create({
+        const data = await prisma.check.create({
           data: {
             ...checks,
             Todo: { connect: { id: todoId } },
@@ -43,7 +43,7 @@ export default class Tasks {
     const prisma = await PrismaDB.getInstance();
 
     try {
-      const data = await prisma.task.delete({
+      const data = await prisma.check.delete({
         where: { id },
       });
 
@@ -60,20 +60,21 @@ export default class Tasks {
 
   static async updateTasks(
     id: string,
-    data: Omit<Task, "id" | "userId" | "todoId" | "title">
+    data: Omit<Check, "id" | "userId" | "todoId">
   ) {
     const prisma = await PrismaDB.getInstance();
 
     try {
-      const oldCheck = await prisma.task.findUnique({
+      const oldCheck = await prisma.check.findUnique({
         where: { id },
       });
 
       if (!oldCheck) return null;
 
-      const newCheck = await prisma.task.update({
+      const newCheck = await prisma.check.update({
         where: { id },
         data: {
+          title: data.title || oldCheck.title,
           completed: data.completed || oldCheck.completed,
         },
       });
@@ -94,7 +95,7 @@ export default class Tasks {
 
     try {
       if (todoId) {
-        const data = await prisma.task.findMany({
+        const data = await prisma.check.findMany({
           where: {
             todoId: { equals: todoId },
           },
@@ -102,7 +103,6 @@ export default class Tasks {
           select: {
             title: true,
             completed: true,
-            id: true,
           },
         });
 
