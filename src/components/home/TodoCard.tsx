@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import {
   Box,
@@ -8,70 +8,22 @@ import {
   useColorModeValue,
   Stack,
   Flex,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton,
-  ModalFooter,
-  Button,
-  Input,
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
 
 import CounterTask from "../../assets/counterTask.svg";
 
 import Image from "next/image";
-import { TodoProps, TodoContext } from "../../context/todo";
+import { TodoProps } from "../../context/todo";
 
-import { SelectTags, TagList } from "./tags";
-
-import { AuthContext } from "../../context/auth";
-import { TaskList } from "./tasks";
+import { TagList } from "./tags";
+import { Task } from "@prisma/client";
 
 interface IProps {
   todo: TodoProps;
+  onOpen: () => void;
 }
 
-export default function TodoCard({ todo }: IProps) {
-  const { deleteTodo, updateTodo } = useContext(TodoContext);
-
-  const { isLoggedIn } = useContext(AuthContext);
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [color, setColor] = useState<string>(todo.color);
-
-  const [data, setData] = useState({
-    title: todo.title,
-    description: todo.description,
-    color: todo.color,
-  });
-
-  const [tagsIds, setTagsIds] = useState<TodoProps["tagIds"]>(
-    todo.tagIds ? todo.tagIds : []
-  );
-
-  const handleEdit = () => {
-    const newValues = {
-      ...data,
-      id: todo.id,
-      completed: todo.completed,
-      tagIds: todo.tagIds,
-    };
-
-    if (todo.title !== data.title || todo.description !== data.description) {
-      updateTodo(newValues);
-    }
-
-    onClose();
-  };
-
+export default function TodoCard({ todo, onOpen }: IProps) {
   return (
     <>
       <GridItem w="full">
@@ -83,13 +35,13 @@ export default function TodoCard({ todo }: IProps) {
           onClick={() => onOpen()}
         >
           <Tag
-            bg={color}
+            bg={todo.color}
             w="full"
             borderBottomEndRadius={0}
             borderBottomStartRadius={0}
           />
 
-          <TagList tagsIds={tagsIds} />
+          <TagList tagsIds={todo.tagIds} />
 
           <Stack
             p={6}
@@ -105,100 +57,51 @@ export default function TodoCard({ todo }: IProps) {
             >
               {todo.title}
             </Text>
-            <Flex alignItems="center" p={2} px={3} gap={2}>
-              <Image src={CounterTask} width={30} height={30} alt="Counter" />
-              <Text>0/3</Text>
-            </Flex>
+
+            <CompletedTasks tasks={todo.tasks} />
           </Stack>
         </Box>
       </GridItem>
-
-      <Modal onClose={handleEdit} isOpen={isOpen} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton onClick={onClose} />
-          <Tag
-            bg={color}
-            w="full"
-            borderBottomEndRadius={0}
-            borderBottomStartRadius={0}
-          />
-
-          <ModalBody>
-            <FormControl marginBottom="1.2rem">
-              <FormLabel
-                color={useColorModeValue("gray.800", "black")}
-                fontSize="lg"
-                fontWeight="bold"
-              >
-                Title
-              </FormLabel>
-              <InputGroup>
-                <Input
-                  type="text"
-                  value={data.title}
-                  fontSize="lg"
-                  onChange={(e) => setData({ ...data, title: e.target.value })}
-                  border="none"
-                  onKeyPress={(e) => (e.key === "Enter" ? handleEdit() : null)}
-                />
-                <InputLeftElement>
-                  <EditIcon />
-                </InputLeftElement>
-              </InputGroup>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel
-                color={useColorModeValue("gray.800", "black")}
-                fontSize="lg"
-                fontWeight="bold"
-              >
-                Description
-              </FormLabel>
-              <InputGroup>
-                <Input
-                  type="text"
-                  value={data.description}
-                  fontSize="lg"
-                  border="none"
-                  onChange={(e) =>
-                    setData({ ...data, description: e.target.value })
-                  }
-                  onKeyPress={(e) => (e.key === "Enter" ? handleEdit() : null)}
-                />
-                <InputLeftElement>
-                  <EditIcon />
-                </InputLeftElement>
-              </InputGroup>
-            </FormControl>
-
-            <TaskList />
-
-            {isLoggedIn === true ? (
-              <SelectTags
-                tagsIds={tagsIds}
-                setTagsIds={setTagsIds}
-                todo={todo}
-              />
-            ) : (
-              ""
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              mr={3}
-              onClick={() => {
-                deleteTodo(todo);
-              }}
-              bg="#de4237"
-              _hover={{ bg: "#c72f24" }}
-            >
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </>
+  );
+}
+
+interface ICompletedTasks {
+  tasks: Task[];
+}
+
+function CompletedTasks({ tasks = [] }: ICompletedTasks) {
+  const completedTasks = useMemo(() => {
+    return tasks.filter((task) => task.completed === true).length;
+  }, [tasks]);
+  if (tasks.length === 0) {
+    return (
+      <Flex alignItems="center" justifyContent="center">
+        <Image src={CounterTask} width="25px" height="25px" />
+        <Text color="whiteAlpha.700" fontSize="lg" marginLeft="0.3rem">
+          No tasks
+        </Text>
+      </Flex>
+    );
+  }
+
+  if (completedTasks === tasks.length) {
+    return (
+      <Flex alignItems="center" justifyContent="center">
+        <Image src={CounterTask} width="25px" height="25px" />
+        <Text color="whiteAlpha.700" fontSize="lg" marginLeft="0.3rem">
+          All tasks completed
+        </Text>
+      </Flex>
+    );
+  }
+
+  return (
+    <Flex alignItems="center" p={2} px={3} gap={2}>
+      <Image src={CounterTask} width={30} height={30} alt="Counter" />
+      <Text>
+        {completedTasks}/{tasks.length}
+      </Text>
+    </Flex>
   );
 }

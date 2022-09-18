@@ -1,9 +1,12 @@
-import { FC, useReducer, useEffect, useContext } from "react";
+import { Task } from "@prisma/client";
+import { FC, useReducer, useEffect, useContext, useState } from "react";
 import { TodoProps, TodoContext, TodoReducer } from ".";
 
 import { AuthContext } from "../auth";
 
 import {
+  handleCreateTask_from_DB,
+  handleCreateTask_from_Ls,
   handleCreateTodo_from_DB,
   handleCreateTodo_from_LS,
   handleDeleteTodo_from_DB,
@@ -24,6 +27,18 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [todoState, dispatch] = useReducer(TodoReducer, TODO_INITIAL_STATE);
+
+  const [todoSelected, setTodoSelected] = useState<TodoProps>({
+    title: "",
+    description: "",
+    color: "",
+    tagIds: [],
+    id: "",
+    completed: false,
+    tasks: [],
+  });
+
+  const [todoLoaded, setTodoLoaded] = useState<boolean>(false);
 
   const { auth, isLoading } = useContext(AuthContext);
 
@@ -52,6 +67,8 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
       const { todos } = await response.json();
 
       dispatch({ type: "[Todo] - LoadTodo from DB | storage", payload: todos });
+
+      setTodoLoaded(true);
     };
 
     getTodos();
@@ -60,7 +77,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   const createTodo = async (
     title: string,
     description: string,
-    color: string,
+    color: string
   ) => {
     const args = {
       title,
@@ -102,9 +119,9 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     return response;
   };
 
-  const setTag = async ({ tagIds, ...todo }: TodoProps) => {
+  const setTag = async ({ tagIds, id: todoId }: TodoProps) => {
     try {
-      const response = await fetch(`/api/todo/${todo.id}/tags`, {
+      const response = await fetch(`/api/todo/${todoId}/tags`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tagIds }),
@@ -123,9 +140,76 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const createTask = async (
+    title: string,
+    completed: boolean
+  ): Promise<Task | null> => {
+    const args = { title, completed, todoSelected, dispatch };
+
+    if (!auth) {
+      return handleCreateTask_from_Ls(args);
+    }
+
+    const response = await handleCreateTask_from_DB(args);
+
+    return response;
+  };
+
+  const deleteTask = async (task: Task): Promise<boolean | null> => {
+    try {
+      const response = await fetch(`/api/tasks/${task.id}/delete`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response) {
+        throw new Error("somenthing went wrong ");
+      }
+
+      dispatch({ type: "[Todo] - Delete task", payload: task });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
+  const updateTask = async (task: Task): Promise<boolean | null> => {
+    try {
+      const response = await fetch(`/api/tasks/${task.id}/update`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task),
+      });
+
+      if (!response) {
+        throw new Error("somenthing went wrong ");
+      }
+
+      dispatch({ type: "[Todo] - Update task", payload: task });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
   return (
     <TodoContext.Provider
-      value={{ ...todoState, createTodo, deleteTodo, updateTodo, setTag }}
+      value={{
+        ...todoState,
+        createTodo,
+        deleteTodo,
+        updateTodo,
+        setTag,
+        todoSelected,
+        setTodoSelected,
+        todoLoaded,
+        createTask,
+        deleteTask,
+        updateTask,
+      }}
     >
       {children}
     </TodoContext.Provider>

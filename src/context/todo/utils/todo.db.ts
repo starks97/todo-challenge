@@ -1,4 +1,5 @@
-import { Dispatch } from "react";
+import { Task } from "@prisma/client";
+import { Dispatch, SetStateAction } from "react";
 import { TodoProps } from "../TodoContext";
 import { TodoState } from "../TodoProvider";
 
@@ -18,6 +19,14 @@ export interface TodoWithActionOptions extends TodoProps {
 
 export interface TodoActionState extends TodoWithActionOptions {
   todoState: TodoState;
+}
+
+export interface TaskProps {
+  title: string;
+  completed: boolean;
+  dispatch: Dispatch<TodoActionType>;
+
+  todoSelected: TodoProps;
 }
 
 export const handleCreateTodo_from_DB = async ({
@@ -40,11 +49,11 @@ export const handleCreateTodo_from_DB = async ({
 
     const todoCreated = await response.json();
 
-    const { task } = todoCreated;
+    const { todo } = todoCreated;
 
     dispatch({
       type: "[Todo] -  Create a todo",
-      payload: [...todoState.todos, task],
+      payload: [...todoState.todos, todo],
     });
 
     return true;
@@ -104,6 +113,35 @@ export const handleUpdateTodo_from_DB = async ({
       payload: updateToDo,
     });
     return true;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const handleCreateTask_from_DB = async ({
+  title,
+  completed,
+  dispatch,
+  todoSelected,
+}: TaskProps): Promise<Task | null> => {
+  try {
+    const response = await fetch(`api/tasks/${todoSelected.id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, completed }),
+    });
+
+    if (!response) return null;
+
+    const { createTasks } = await response.json();
+
+    dispatch({
+      type: "[Todo] - Create task",
+      payload: createTasks,
+    });
+
+    return createTasks;
   } catch (e) {
     console.log(e);
     return null;

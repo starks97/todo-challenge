@@ -1,27 +1,61 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, useContext, useMemo } from "react";
 
 import {
   Input,
-  Button,
   List,
   Flex,
-  Box,
   Text,
   FormControl,
-  FormLabel,
-  InputGroup,
   useColorModeValue,
-  ListItem,
-  Checkbox,
 } from "@chakra-ui/react";
 
 import Image from "next/image";
 
 import AddTask from "../../../assets/AddTask.svg";
 
-type Props = {};
+import TaskCard from "./TaskCard";
+import { TodoContext } from "../../../context/todo";
+import { Task } from "@prisma/client";
+import todo from "../../../pages/api/todo";
 
-export default function TaskList({}: Props) {
+interface Props {
+  taskCreated: { title: string; completed: boolean };
+  setTaskCreated: Dispatch<
+    SetStateAction<{ title: string; completed: boolean }>
+  >;
+}
+
+export default function TaskList({ taskCreated, setTaskCreated }: Props) {
+  const { createTask, todoSelected, todos } = useContext(TodoContext);
+
+  const handleForm = async () => {
+    try {
+      const response = await createTask(
+        taskCreated.title,
+        taskCreated.completed
+      );
+
+      setTaskCreated({ title: "", completed: false });
+
+      if (!response) {
+        throw new Error("Something went wrong");
+      }
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+
+  const taskState = useMemo(() => {
+    const todo = todos.find((todo) => todo.id === todoSelected.id);
+
+    if (!todo) {
+      return [];
+    }
+
+    return todo.tasks;
+  }, [todos]);
+
   return (
     <Flex marginTop="1rem" flexDirection="column">
       <Flex alignItems="center" justifyContent="flex-start" fontWeight="bold">
@@ -33,20 +67,22 @@ export default function TaskList({}: Props) {
 
       <Flex marginTop="0.5rem">
         <FormControl>
-          <Input type="text" />
+          <Input
+            type="text"
+            value={taskCreated.title}
+            onChange={(e) =>
+              setTaskCreated({ ...taskCreated, title: e.target.value })
+            }
+            onKeyPress={(e) => (e.key === "Enter" ? handleForm() : null)}
+          />
         </FormControl>
       </Flex>
 
-      <Flex marginTop="0.6rem">
-        <List>
-          <ListItem m="0.8rem">
-            <Checkbox>first task</Checkbox>
-          </ListItem>
-          <ListItem m="0.8rem">
-            <Checkbox>first task</Checkbox>
-          </ListItem>
-        </List>
-      </Flex>
+      <List>
+        {taskState?.map((task) => (
+          <TaskCard key={task.id} task={task} />
+        ))}
+      </List>
     </Flex>
   );
 }

@@ -2,7 +2,8 @@ import { generateId } from "../../../app/backend/utils";
 
 import { TodoProps } from "../TodoContext";
 
-import { Props, TodoWithActionOptions, TodoActionState } from ".";
+import { Props, TodoWithActionOptions, TodoActionState, TaskProps } from ".";
+import { Task } from "@prisma/client";
 
 export const handleCreateTodo_from_LS = ({
   title,
@@ -18,6 +19,8 @@ export const handleCreateTodo_from_LS = ({
       color,
       completed: false,
       id: generateId(),
+      tagIds: [],
+      tasks: [],
     };
 
     localStorage.setItem(
@@ -80,6 +83,37 @@ export const handleUpdateTodo_from_Ls = ({
       payload: newTodos,
     });
     return true;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const handleCreateTask_from_Ls = ({
+  title,
+  completed,
+  dispatch,
+  todoSelected,
+}: TaskProps) => {
+  try {
+    const newTask = {
+      title,
+      completed,
+      id: generateId(),
+      todoId: todoSelected.id,
+      userId: "",
+    };
+
+    const oldTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    localStorage.setItem("tasks", JSON.stringify([...oldTasks, newTask]));
+
+    dispatch({
+      type: "[Todo] - Create task",
+      payload: newTask,
+    });
+
+    return newTask;
   } catch (e) {
     console.log(e);
     return null;

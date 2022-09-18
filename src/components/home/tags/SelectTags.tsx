@@ -15,12 +15,10 @@ import TagSelected from "./TagSelected";
 import { TodoProps } from "../../../context/todo";
 
 interface Props {
-  setTagsIds: React.Dispatch<React.SetStateAction<string[]>>;
-  tagsIds: string[];
   todo: TodoProps;
 }
 
-export default function SelectTags({ tagsIds, setTagsIds, todo }: Props) {
+export default function SelectTags({ todo }: Props) {
   const { tag } = useContext(TagContext);
   return (
     <Container marginTop="1rem" justifyContent="flex-end">
@@ -43,8 +41,6 @@ export default function SelectTags({ tagsIds, setTagsIds, todo }: Props) {
               <TagSelected
                 tag={tag}
                 key={tag.id}
-                setTagsIds={setTagsIds}
-                tagsIds={tagsIds}
                 todo={todo}
               />
             ))}
