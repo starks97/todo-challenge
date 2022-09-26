@@ -14,6 +14,7 @@ import {
   handleDeleteTodo_from_DB,
   handleDeleteTodo_from_Ls,
   handleUpdateTask_from_DB,
+  handleUpdateTask_from_Ls,
   handleUpdateTodo_from_DB,
   handleUpdateTodo_from_Ls,
 } from "./utils";
@@ -194,12 +195,12 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
     return response;
   };
 
-  const updateTask = async (task: Task): Promise<Task| null> => {
+  const updateTask = async (task: Task) => {
 
     const args = { dispatch, todoSelected, ...task}
 
     if(!auth){
-      return handleDeleteTask_from_Ls(args)
+      return handleUpdateTask_from_Ls(args )
     }
 
     const response = await handleUpdateTask_from_DB(args);

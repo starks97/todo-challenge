@@ -26,9 +26,22 @@ interface ContextProps {
   todoLoaded: boolean;
   createTask: (title: string, completed: boolean) => Promise<Task | null>;
   deleteTask: (task: Task) => Promise<Task | null>;
-  updateTask: (task: Task) => Promise<Task | null>;
-  filterBy: "ALL" | "COMPLETED" | "ACTIVE"
-  setFilterBy: Dispatch<SetStateAction<"ALL" | "COMPLETED" | "ACTIVE">>
+  updateTask: (
+    task: Task
+  ) => Promise<
+    | Task[]
+    | {
+        userId: string;
+        id: string;
+        todoId: string;
+        title: string;
+        completed: boolean;
+        todoSelected: TodoProps;
+      }
+    | null
+  >;
+  filterBy: "ALL" | "COMPLETED" | "ACTIVE";
+  setFilterBy: Dispatch<SetStateAction<"ALL" | "COMPLETED" | "ACTIVE">>;
 }
 
 export const TodoContext = createContext({} as ContextProps);

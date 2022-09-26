@@ -110,32 +110,29 @@ export const TodoReducer = (
         }),
       };
 
+
     case "[Todo] - Update tasks":
-    return {
-      ...state,
-
-      todos: state.todos.map((item) => {
-        if (item.id === action.payload[0].todoId) {
-          return {
-            ...item,
-            tasks: item.tasks?.map((task) => {
-              let newTask = action.payload.find((task) => {
-                return task.id === item.id;
-              });
-              if (newTask) {
-                return {
-                  ...task,
-                  ...newTask,
-                };
-              }
-              return task;
-            }),
-          };
-        }
-        return item;
-      }),
-    };
-
+      return {
+        ...state,
+        todos: state.todos.map((item) => {
+          if (item.id === action.payload[0]?.todoId) {
+            return {
+              ...item,
+              tasks: item.tasks?.map((task) => {
+                const newTask = action.payload.find((t) => t.id === task.id);
+                if (newTask) {
+                  return {
+                    ...task,
+                    ...newTask,
+                  };
+                }
+                return task;
+              }),
+            };
+          }
+          return item;
+        }),
+      };
     default:
       return state;
   }

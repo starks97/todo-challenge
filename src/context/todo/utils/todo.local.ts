@@ -154,30 +154,25 @@ export const handleDeleteTask_from_Ls = ({
 export const handleUpdateTask_from_Ls = ({
   dispatch,
   todoSelected,
-  todoState,
   ...task
-}: TP) => {
+}: TaskPropsWithActionOptions) => {
   try {
-    const newTask = todoState.todos.find(todo => todo.id === todoSelected.id)?.tasks!.map((t: Task) => {
+    const newTask = todoSelected.tasks?.map((t: Task) => {
       if (t.id === task.id) {
         return task;
       }
       return t;
-
-    })
+    }) 
 
     if(newTask === undefined) return null
 
     localStorage.setItem("tasks", JSON.stringify(newTask));
 
-
     dispatch({
       type: "[Todo] - Update tasks",
       payload: newTask,
     })
-
-
-    return newTask;
+    return newTask
   } catch (e) {
     console.log(e);
     return null;

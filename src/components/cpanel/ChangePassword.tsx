@@ -54,7 +54,9 @@ export default function ChangePassword() {
           />
         ),
       });
+      setNewPassword({ password: "" });
       return response
+      
 
     }catch(e){
       console.log(e)
@@ -84,30 +86,32 @@ export default function ChangePassword() {
       </Text>
 
       <Box marginTop="1rem">
-        <FormControl>
-          <FormLabel color={useColorModeValue("white", "white")}>
-            NewPassword
-          </FormLabel>
-          <InputGroup size="md">
-            <Input
-              pr="4.5rem"
-              type={show ? "text" : "password"}
-              placeholder="Enter password"
-              value={newPassword.password}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setNewPassword({ ...newPassword, password: e.target.value })
-              }
-            />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick}>
-                {show ? "Hide" : "Show"}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
+        <form>
+          <FormControl>
+            <FormLabel color={useColorModeValue("white", "white")}>
+              NewPassword
+            </FormLabel>
+            <InputGroup size="md">
+              <Input
+                pr="4.5rem"
+                type={show ? "text" : "password"}
+                placeholder="Enter password"
+                value={newPassword.password}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setNewPassword({ ...newPassword, password: e.target.value })
+                }
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </FormControl>
+        </form>
       </Box>
       <Flex flexDirection="column">
-        <Button type="submit" onClick={() => handleChangePassword}>
+        <Button type="submit" onClick={handleChangePassword}>
           Change
         </Button>
       </Flex>
