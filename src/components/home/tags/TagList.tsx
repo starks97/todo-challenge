@@ -10,7 +10,7 @@ interface Props {
 export default function TagList({ tagsIds }: Props) {
   const { tag } = useContext(TagContext);
 
-  const tags = tagsIds.map((id) => {
+  const tags = tagsIds?.map((id) => {
     return tag.find((element) => element.id === id) as TagProps;
   });
 
@@ -21,8 +21,8 @@ export default function TagList({ tagsIds }: Props) {
         gridGap={{ base: "0.5rem", md: "1.3rem" }}
       >
         <GridItem>
-          {tags.map((item) => (
-            <Tag key={item.id} bg={item.color} w="4rem" m="0.3rem" />
+          {tags?.map((item) => (
+            <Tag key={item?.id} bg={item?.color} w="4rem" m="0.3rem" />
           ))}
         </GridItem>
       </Grid>

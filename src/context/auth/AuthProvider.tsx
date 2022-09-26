@@ -111,6 +111,10 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const logoutUser = () => {
+    Cookies.remove("token");
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -120,9 +124,14 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         // Methods
         loginUser,
         registerUser,
+        logoutUser,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
+function useSession(): { data: any; status: any; } {
+  throw new Error("Function not implemented.");
+}
+

@@ -107,7 +107,7 @@ export default class Todos {
           title: data.title || oldTodo.title,
           description: data.description || oldTodo.description,
           color: data.color || oldTodo.color,
-          completed: data.completed || oldTodo.completed,
+          completed: data.completed ?? oldTodo.completed,
         },
       });
 
@@ -138,6 +138,47 @@ export default class Todos {
       if (!newTodoData) return null;
 
       return newTodoData;
+    } catch (e) {
+      return null;
+    } finally {
+      await PrismaDB.disconnect();
+    }
+  }
+
+  static async searchTodosBy<T extends string | undefined>(q: T) {
+    const prisma = await PrismaDB.getInstance();
+
+    try {
+      const data = await prisma.toDo.findMany({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: q,
+              },
+            },
+            {
+              description: {
+                contains: q,
+              },
+            },
+          ],
+        },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          color: true,
+          userId: true,
+          tagIds: true,
+          tasks: true,
+          completed: true,
+        },
+      });
+
+      if (!data) return null;
+
+      return data;
     } catch (e) {
       return null;
     } finally {

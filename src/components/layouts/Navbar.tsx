@@ -14,19 +14,30 @@ import {
   Stack,
   useColorMode,
   Center,
+  MenuItem,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+
+import { NextRouter, useRouter } from "next/router";
+
+
 import { NavLinks } from "../navbar";
-import { FilterTags, SearchInput } from "../navbar";
+import { FilterTags } from "../navbar";
 import { AddTaskModal } from "../Modal";
 import { AuthContext } from "../../context/auth";
-import { User } from "@prisma/client";
 
 export default function Navbar() {
-  const { isLoggedIn, auth } = useContext(AuthContext);
+  const { isLoggedIn, auth, logoutUser } = useContext(AuthContext);
+
+  const router: NextRouter = useRouter();
 
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleOut = () => {
+    logoutUser();
+    router.reload();
+  }
 
   return (
     <>
@@ -39,7 +50,6 @@ export default function Navbar() {
             <Stack direction={"row"} spacing={3}>
               <AddTaskModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
               <FilterTags />
-              <SearchInput />
             </Stack>
           </Flex>
 
@@ -82,7 +92,7 @@ export default function Navbar() {
                   {isLoggedIn ? (
                     <>
                       <NavLinks url={"/cpanel"}>Profile</NavLinks>
-                      <NavLinks url={"#"}>Logout </NavLinks>
+                      <MenuItem onClick={handleOut}>Logout</MenuItem>
                     </>
                   ) : (
                     <>

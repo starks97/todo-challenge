@@ -9,8 +9,11 @@ import {
   handleCreateTask_from_Ls,
   handleCreateTodo_from_DB,
   handleCreateTodo_from_LS,
+  handleDeleteTask_from_DB,
+  handleDeleteTask_from_Ls,
   handleDeleteTodo_from_DB,
   handleDeleteTodo_from_Ls,
+  handleUpdateTask_from_DB,
   handleUpdateTodo_from_DB,
   handleUpdateTodo_from_Ls,
 } from "./utils";
@@ -23,10 +26,32 @@ const TODO_INITIAL_STATE: TodoState = {
   todos: [],
 };
 
+export const Filters = {
+  ALL: { callback: (todos: TodoProps[]) => todos, label: "All Todos" },
+  COMPLETED: {
+    callback: (todos: TodoProps[]) =>
+      todos.filter((todo) =>
+        todo.tasks?.every((task) => task.completed === true)
+      ),
+    label: "Completed",
+  },
+  ACTIVE: {
+    callback: (todos: TodoProps[]) =>
+      todos.filter(
+        (todo) => !todo.tasks?.every((task) => task.completed === true)
+      ),
+    label: "Active",
+  },
+};
+
+export type F = keyof typeof Filters;
+
 export const TodoProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [todoState, dispatch] = useReducer(TodoReducer, TODO_INITIAL_STATE);
+
+  const [filterBy, setFilterBy] = useState<F>("ALL");
 
   const [todoSelected, setTodoSelected] = useState<TodoProps>({
     title: "",
@@ -152,53 +177,42 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
 
     const response = await handleCreateTask_from_DB(args);
 
+    if (!response) return null;
+
     return response;
   };
 
-  const deleteTask = async (task: Task): Promise<boolean | null> => {
-    try {
-      const response = await fetch(`/api/tasks/${task.id}/delete`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!response) {
-        throw new Error("somenthing went wrong ");
-      }
+  const deleteTask = async (task: Task): Promise<Task | null> => {
+    const args = { ...task, dispatch, todoSelected };
 
-      dispatch({ type: "[Todo] - Delete task", payload: task });
-
-      return true;
-    } catch (e) {
-      console.log(e);
-      return null;
+    if (!auth) {
+      return handleDeleteTask_from_Ls(args);
     }
+
+    const response = await handleDeleteTask_from_DB(args);
+
+    return response;
   };
 
-  const updateTask = async (task: Task): Promise<boolean | null> => {
-    try {
-      const response = await fetch(`/api/tasks/${task.id}/update`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(task),
-      });
+  const updateTask = async (task: Task): Promise<Task| null> => {
 
-      if (!response) {
-        throw new Error("somenthing went wrong ");
-      }
+    const args = { dispatch, todoSelected, ...task}
 
-      dispatch({ type: "[Todo] - Update task", payload: task });
-
-      return true;
-    } catch (e) {
-      console.log(e);
-      return null;
+    if(!auth){
+      return handleDeleteTask_from_Ls(args)
     }
+
+    const response = await handleUpdateTask_from_DB(args);
+
+    return response
   };
 
   return (
     <TodoContext.Provider
       value={{
         ...todoState,
+        filterBy,
+        setFilterBy,
         createTodo,
         deleteTodo,
         updateTodo,

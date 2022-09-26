@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 
 import {
   Box,
@@ -13,10 +13,12 @@ import {
 import CounterTask from "../../assets/counterTask.svg";
 
 import Image from "next/image";
-import { TodoProps } from "../../context/todo";
+import { TodoContext, TodoProps } from "../../context/todo";
 
 import { TagList } from "./tags";
 import { Task } from "@prisma/client";
+import todo from "../../pages/api/todo";
+
 
 interface IProps {
   todo: TodoProps;
@@ -24,6 +26,8 @@ interface IProps {
 }
 
 export default function TodoCard({ todo, onOpen }: IProps) {
+
+ 
   return (
     <>
       <GridItem w="full">
@@ -58,7 +62,7 @@ export default function TodoCard({ todo, onOpen }: IProps) {
               {todo.title}
             </Text>
 
-            <CompletedTasks tasks={todo.tasks} />
+            <CompletedTasks tasks={todo.tasks!} />
           </Stack>
         </Box>
       </GridItem>
@@ -70,10 +74,15 @@ interface ICompletedTasks {
   tasks: Task[];
 }
 
-function CompletedTasks({ tasks = [] }: ICompletedTasks) {
+
+
+function CompletedTasks({ tasks = []}: ICompletedTasks) {
+
   const completedTasks = useMemo(() => {
     return tasks.filter((task) => task.completed === true).length;
   }, [tasks]);
+
+  
   if (tasks.length === 0) {
     return (
       <Flex alignItems="center" justifyContent="center">

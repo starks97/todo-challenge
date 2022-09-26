@@ -20,6 +20,7 @@ export default methodSwitcher({
 
     const { completed = false }: { completed: boolean } = req.body;
 
+
     const updateTask = await Tasks.updateTasks(id, { completed });
 
     if (!updateTask) {

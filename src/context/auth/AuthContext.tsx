@@ -10,6 +10,7 @@ export interface ContextProps {
     password: string
   ) => Promise<{ hasError: boolean; message?: string }>;
   isLoading: boolean;
+  logoutUser: () => void;
 }
 
 export const AuthContext = createContext({} as ContextProps);

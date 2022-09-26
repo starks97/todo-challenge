@@ -1,12 +1,31 @@
-import React from "react";
-import { Button, Box } from "@chakra-ui/react";
+import React, { useContext } from "react";
 
-type Props = {};
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 
-export default function FilterTags({}: Props) {
+import { TodoContext, Filters, F } from "../../context/todo";
+
+const pickFilter = Object.entries(Filters);
+
+export default function FilterTags() {
+  const { todos, setFilterBy } = useContext(TodoContext);
+
+  const handleFilter = (filter: F) => {
+    setFilterBy(filter);
+  };
   return (
-    <Box>
-      <Button>Filters(0)</Button>
-    </Box>
+    <Menu>
+      <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+        Filter
+      </MenuButton>
+
+      <MenuList>
+        {pickFilter.map(([filter, label]) => (
+          <MenuItem onClick={() => handleFilter(filter as F)} key={label.label}>
+            {label.label}
+          </MenuItem>
+        ))}
+      </MenuList>
+    </Menu>
   );
 }

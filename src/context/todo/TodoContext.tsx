@@ -8,7 +8,7 @@ export interface TodoProps {
   color: string;
   id: string;
   tagIds: string[];
-  tasks: Task[];
+  tasks?: Task[];
 }
 
 interface ContextProps {
@@ -25,8 +25,10 @@ interface ContextProps {
   setTodoSelected: Dispatch<SetStateAction<TodoProps>>;
   todoLoaded: boolean;
   createTask: (title: string, completed: boolean) => Promise<Task | null>;
-  deleteTask: (task: Task) => Promise<boolean | null>;
-  updateTask: (task: Task) => Promise<boolean | null>;
+  deleteTask: (task: Task) => Promise<Task | null>;
+  updateTask: (task: Task) => Promise<Task | null>;
+  filterBy: "ALL" | "COMPLETED" | "ACTIVE"
+  setFilterBy: Dispatch<SetStateAction<"ALL" | "COMPLETED" | "ACTIVE">>
 }
 
 export const TodoContext = createContext({} as ContextProps);

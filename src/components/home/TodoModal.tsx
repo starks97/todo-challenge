@@ -26,29 +26,27 @@ import { SelectTags } from "./tags";
 import { TodoContext } from "../../context/todo";
 import { AuthContext } from "../../context/auth";
 
+
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function TodoModal({ isOpen, onClose }: IProps) {
-  const { deleteTodo, updateTodo, todoSelected, setTodoSelected } =
+  const { deleteTodo, updateTodo, todoSelected, setTodoSelected, todos } =
     useContext(TodoContext);
 
-  //tasks
-
-  const [taskCreated, setTaskCreated] = useState({
-    title: "",
-    completed: false,
-  });
 
   const { isLoggedIn } = useContext(AuthContext);
 
-  const handleEdit = () => {
-    updateTodo(todoSelected);
 
+  const handleEdit = () => {
+    updateTodo({
+      ...todoSelected,
+      tasks: todos.find((t) => t.id === todoSelected.id)?.tasks || [],
+    });
     onClose();
-  };
+  }
 
   return (
     <Modal
@@ -121,7 +119,7 @@ export default function TodoModal({ isOpen, onClose }: IProps) {
             </InputGroup>
           </FormControl>
 
-          <TaskList taskCreated={taskCreated} setTaskCreated={setTaskCreated} />
+          <TaskList />
 
           {isLoggedIn === true ? <SelectTags todo={todoSelected} /> : ""}
         </ModalBody>

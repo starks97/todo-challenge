@@ -18,15 +18,24 @@ export interface TodoWithActionOptions extends TodoProps {
 }
 
 export interface TodoActionState extends TodoWithActionOptions {
-  todoState: TodoState;
+  todoState: TodoState
 }
 
 export interface TaskProps {
   title: string;
   completed: boolean;
   dispatch: Dispatch<TodoActionType>;
-
   todoSelected: TodoProps;
+}
+
+export interface TaskPropsWithActionOptions extends TaskProps {
+  userId: string;
+  id: string;
+  todoId: string;
+}
+
+export interface TP extends TaskPropsWithActionOptions {
+  todoState: TodoState;
 }
 
 export const handleCreateTodo_from_DB = async ({
@@ -102,7 +111,7 @@ export const handleUpdateTodo_from_DB = async ({
     if (!response.ok) {
       throw new Error("Something went wrong");
     }
-    const updateToDo = todoState.todos.map((element) => {
+    const updateToDo = todoState.todos!.map((element) => {
       if (element.id !== todo.id) return element;
 
       return todo;
@@ -147,3 +156,47 @@ export const handleCreateTask_from_DB = async ({
     return null;
   }
 };
+
+export const handleDeleteTask_from_DB = async ({dispatch, ...task}: TaskPropsWithActionOptions):Promise<Task| null> => {
+  try {
+    const response = await fetch(`/api/tasks/${task.id}/delete`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response) {
+      throw new Error("somenthing went wrong ");
+    }
+
+
+    dispatch({ type: "[Todo] - Delete task", payload: task });
+
+    return task;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+export const handleUpdateTask_from_DB = async ({dispatch, ...task}: TaskPropsWithActionOptions) => {
+  try {
+    const response = await fetch(`/api/tasks/${task.id}/update`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task),
+    });
+
+    if (!response) {
+      throw new Error("somenthing went wrong ");
+    }
+
+    dispatch({ type: "[Todo] - Update task", payload: task });
+
+    return task;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+
+}

@@ -88,38 +88,40 @@ export class UserAuth {
     }
     return null;
   }
-}
 
-/*
-type GenericNames = "user";
+  static async UpdatePassword (id: string, data: Omit<User, "id" | "isAdmin" | "createdAt" | "updatedAt" | "username">):Promise<User | null> {
+    const prisma = await PrismaDB.getInstance();
+    
+    try{
+      if(id){
+        const oldPassword = await prisma.user.findUnique({
+          where: { id },
+        });
 
+        if (!oldPassword) return null;
 
-if(data === null || data === undefined || typeof data !== "object") {
-  throw new Error("data is not an object");
-}
+        data.password = await GenerateCryptPassword.setHashPassword(
+          data.password
+        );
 
-class GenericModel<T extends User = User> {
-  constructor(private prisma: PrismaClient, private name: GenericNames) {}
+        const newPassword = await prisma.user.update({
+          where: { id },
+          data: {
+            password: data.password || oldPassword.password,
+          },
+        });
+        
 
-  async register(dat: T): Promise<T> {
-    const prisma = this.prisma;
-    try {
-      const data = await prisma[this.name].create({
-        data: dat,
-      });
-      return data;
-    } catch (err) {
-      console.error(err);
-      return false;
-    } finally {
+        return newPassword;
+      }
+      return null
+    }catch(e){
+      console.log(e)
+      return null
+    }finally{
       await PrismaDB.disconnect();
     }
   }
 }
 
-const userModel = async () => {
-  const createuser = new GenericModel<User>(
-    await PrismaDB.getInstance(),
-    "user"
-  );
-};*/
+

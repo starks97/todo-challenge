@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useContext, useMemo } from "react";
+import React, { Dispatch, SetStateAction, useContext, useMemo, useState } from "react";
 
 import {
   Input,
@@ -15,18 +15,15 @@ import AddTask from "../../../assets/AddTask.svg";
 
 import TaskCard from "./TaskCard";
 import { TodoContext } from "../../../context/todo";
-import { Task } from "@prisma/client";
-import todo from "../../../pages/api/todo";
 
-interface Props {
-  taskCreated: { title: string; completed: boolean };
-  setTaskCreated: Dispatch<
-    SetStateAction<{ title: string; completed: boolean }>
-  >;
-}
 
-export default function TaskList({ taskCreated, setTaskCreated }: Props) {
-  const { createTask, todoSelected, todos } = useContext(TodoContext);
+export default function TaskList() {
+  const { createTask, todoSelected, todos } = useContext(TodoContext);  
+
+  const [taskCreated, setTaskCreated] = useState({
+    title: "",
+    completed: false,
+  });
 
   const handleForm = async () => {
     try {
@@ -45,15 +42,12 @@ export default function TaskList({ taskCreated, setTaskCreated }: Props) {
       return null;
     }
   };
+  
 
   const taskState = useMemo(() => {
-    const todo = todos.find((todo) => todo.id === todoSelected.id);
+    const todo = todos.find((todo) => todo.id === todoSelected?.id);
+    return todo?.tasks
 
-    if (!todo) {
-      return [];
-    }
-
-    return todo.tasks;
   }, [todos]);
 
   return (

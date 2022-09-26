@@ -2,7 +2,14 @@ import { generateId } from "../../../app/backend/utils";
 
 import { TodoProps } from "../TodoContext";
 
-import { Props, TodoWithActionOptions, TodoActionState, TaskProps } from ".";
+import {
+  Props,
+  TodoWithActionOptions,
+  TodoActionState,
+  TaskProps,
+  TaskPropsWithActionOptions,
+  TP,
+} from ".";
 import { Task } from "@prisma/client";
 
 export const handleCreateTodo_from_LS = ({
@@ -112,6 +119,63 @@ export const handleCreateTask_from_Ls = ({
       type: "[Todo] - Create task",
       payload: newTask,
     });
+
+    return newTask;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const handleDeleteTask_from_Ls = ({
+  dispatch,
+  todoSelected,
+  ...task
+}: TaskPropsWithActionOptions) => {
+  try {
+    const tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    const newTask = tasks.filter((t: Task) => t.id !== task.id);
+
+    localStorage.setItem("tasks", JSON.stringify(newTask));
+
+    dispatch({
+      type: "[Todo] - Delete task",
+      payload: task,
+    });
+
+    return newTask;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+};
+
+export const handleUpdateTask_from_Ls = ({
+  dispatch,
+  todoSelected,
+  todoState,
+  ...task
+}: TP) => {
+  try {
+    const newTask = todoState.todos.find(todo => todo.id === todoSelected.id)?.tasks!.map((t: Task) => {
+      if (t.id === task.id) {
+        return task;
+      }
+      return t;
+
+    })
+
+    if(newTask === undefined) return null
+
+    localStorage.setItem("tasks", JSON.stringify(newTask));
+
+
+    dispatch({
+      type: "[Todo] - Update tasks",
+      payload: newTask,
+    })
+
 
     return newTask;
   } catch (e) {

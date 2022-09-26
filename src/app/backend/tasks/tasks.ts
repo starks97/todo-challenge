@@ -74,7 +74,7 @@ export default class Tasks {
       const newCheck = await prisma.task.update({
         where: { id },
         data: {
-          completed: data.completed || oldCheck.completed,
+          completed: data.completed ?? oldCheck.completed,
         },
       });
 

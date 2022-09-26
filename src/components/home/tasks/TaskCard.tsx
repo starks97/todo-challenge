@@ -2,6 +2,7 @@ import React, {
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -26,7 +27,6 @@ export default function TaskCard({ task }: Props) {
   const { deleteTask, updateTask } = useContext(TodoContext);
   const [ischecked, setIsChecked] = useState<boolean>(task.completed);
 
-  console.log(ischecked);
 
   const handleChecked = () => {
     setIsChecked(!ischecked);

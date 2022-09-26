@@ -26,7 +26,6 @@ export default methodSwitcher({
         password = "",
         username = "",
       }: { password: string; username: string } = req.body;
-      console.log(req.body);
 
       const user = await UserAuth.login(password, username);
       if (!user) {

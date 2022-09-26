@@ -9,7 +9,8 @@ export type TodoActionType =
   | { type: "[Todo] - Set Tag to Todo"; payload: TodoProps }
   | { type: "[Todo] - Create task"; payload: Task }
   | { type: "[Todo] - Delete task"; payload: Task }
-  | { type: "[Todo] - Update task"; payload: Task };
+  | { type: "[Todo] - Update task"; payload: Task }
+  | { type: "[Todo] - Update tasks"; payload: Task[] };
 
 /*export enum TodoActionEnum {
   TODO_CREATE = "[Todo] -  Create a todo" //todo.create
@@ -65,7 +66,7 @@ export const TodoReducer = (
           if (item.id === action.payload.todoId) {
             return {
               ...item,
-              tasks: [...item.tasks, action.payload],
+              tasks: [...item.tasks!, action.payload],
             };
           }
           return item;
@@ -79,7 +80,7 @@ export const TodoReducer = (
           if (item.id === action.payload.todoId) {
             return {
               ...item,
-              tasks: item.tasks.filter((task) => task.id !== action.payload.id),
+              tasks: item.tasks?.filter((task) => task.id !== action.payload.id),
             };
           }
           return item;
@@ -94,7 +95,7 @@ export const TodoReducer = (
           if (item.id === action.payload.todoId) {
             return {
               ...item,
-              tasks: item.tasks.map((task) => {
+              tasks: item.tasks?.map((task) => {
                 if (task.id === action.payload.id) {
                   return {
                     ...task,
@@ -108,6 +109,32 @@ export const TodoReducer = (
           return item;
         }),
       };
+
+    case "[Todo] - Update tasks":
+    return {
+      ...state,
+
+      todos: state.todos.map((item) => {
+        if (item.id === action.payload[0].todoId) {
+          return {
+            ...item,
+            tasks: item.tasks?.map((task) => {
+              let newTask = action.payload.find((task) => {
+                return task.id === item.id;
+              });
+              if (newTask) {
+                return {
+                  ...task,
+                  ...newTask,
+                };
+              }
+              return task;
+            }),
+          };
+        }
+        return item;
+      }),
+    };
 
     default:
       return state;
