@@ -135,7 +135,7 @@ export const handleCreateTask_from_DB = async ({
   todoSelected,
 }: TaskProps): Promise<Task | null> => {
   try {
-    const response = await fetch(`api/tasks/${todoSelected.id}`, {
+    const response = await fetch(`/api/tasks/${todoSelected.id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, completed }),
