@@ -141,7 +141,7 @@ export const handleCreateTask_from_DB = async ({
       body: JSON.stringify({ title, completed }),
     });
 
-    if (!response) return null;
+    if (!response.ok) return null;
 
     const { createTasks } = await response.json();
 
@@ -164,7 +164,7 @@ export const handleDeleteTask_from_DB = async ({dispatch, ...task}: TaskPropsWit
       headers: { "Content-Type": "application/json" },
     });
 
-    if (!response) {
+    if (!response.ok) {
       throw new Error("somenthing went wrong ");
     }
 
@@ -187,7 +187,7 @@ export const handleUpdateTask_from_DB = async ({dispatch, ...task}: TaskPropsWit
       body: JSON.stringify(task),
     });
 
-    if (!response) {
+    if (!response.ok) {
       throw new Error("somenthing went wrong ");
     }
 

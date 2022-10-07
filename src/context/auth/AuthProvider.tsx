@@ -38,7 +38,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
           headers: { "Content-Type": "application/json" },
         }
       );
-      if (response.status === 200) {
+      if (response.ok) {
         const userChecked = await response.json();
 
         const { auth } = userChecked;

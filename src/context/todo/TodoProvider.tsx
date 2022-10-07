@@ -88,7 +88,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
         headers: { "Content-Type": "application/json" },
       });
 
-      if (!response) return null;
+      if (!response.ok) return null;
 
       const { todos } = await response.json();
 
@@ -153,7 +153,7 @@ export const TodoProvider: FC<{ children: React.ReactNode }> = ({
         body: JSON.stringify({ tagIds }),
       });
 
-      if (!response) return null;
+      if (!response.ok) return null;
 
       const { data } = await response.json();
 
